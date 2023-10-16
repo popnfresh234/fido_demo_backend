@@ -15,6 +15,6 @@ public class JsonExceptionHandler {
     public ResponseEntity<Object> handleALlOtherErrors(Exception exception){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(ErrorResponse.builder().message((exception.getMessage())).build());
+                .body(new ErrorResponse(exception.getMessage()));
     }
 }

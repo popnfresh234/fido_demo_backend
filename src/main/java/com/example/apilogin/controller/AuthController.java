@@ -33,15 +33,8 @@ public class AuthController {
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
-        return LoginResponse.builder()
-                .accessToken(token)
-                .build();
+        return new LoginResponse("Login Success", token);
 
 
-    }
-
-    @GetMapping("auth/test")
-    public String test() {
-        return "test";
     }
 }
