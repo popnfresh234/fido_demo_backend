@@ -22,29 +22,26 @@ import java.util.List;
 public class AuthController {
     private final JwtIssuer jwtIssuer;
     private final AuthenticationManager authenticationManager;
+
     @PostMapping("auth/login")
-    public LoginResponse login(@RequestBody @Validated LoginRequest request){
-        System.out.println("WHAT");
-        try {
-            var authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            var principal = (UserPrincipal) authentication.getPrincipal();
-            var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
-            return LoginResponse.builder()
-                    .accessToken(token)
-                    .build();
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        return null;
+    public LoginResponse login(@RequestBody @Validated LoginRequest request) {
+
+        var authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        var principal = (UserPrincipal) authentication.getPrincipal();
+        var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
+        return LoginResponse.builder()
+                .accessToken(token)
+                .build();
+
+
     }
 
     @GetMapping("auth/test")
-    public String test(){
+    public String test() {
         return "test";
     }
 }
