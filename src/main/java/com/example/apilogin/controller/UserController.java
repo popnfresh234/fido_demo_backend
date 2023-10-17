@@ -1,15 +1,28 @@
 package com.example.apilogin.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.apilogin.entities.UserEntity;
+import com.example.apilogin.security.JwtDecoder;
+import com.example.apilogin.security.JwtToPrincipalConverter;
+import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.JwtUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
+import java.util.Optional;
+
 @RestController
 @CrossOrigin
-@RequestMapping(path="/user")
+@RequestMapping(path = "/user")
+@RequiredArgsConstructor
+
 public class UserController {
+    private final JwtDecoder jwtDecoder;
+    private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
     private UserRepository userRepository;
 
@@ -20,12 +33,27 @@ public class UserController {
     }
 
     @GetMapping(path = "/")
-    public @ResponseBody UserEntity getUser(@RequestParam String email) {
-        UserEntity user = userRepository.findByEmail(email);
-        if (user == null) {
+
+    public @ResponseBody UserEntity getUser(@RequestHeader (name="Authorization") String token, @RequestParam Integer id) {
+        long currentId = -1;
+        Optional<String> jwtToken = JwtUtils.parseToken(token);
+        if(jwtToken.isPresent()){
+            DecodedJWT test = jwtDecoder.decode(jwtToken.get());
+            UserPrincipal principal= jwtToPrincipalConverter.convert(test);
+            currentId = principal.getUserId();
+        }
+
+        if(currentId != id){
+            throw new DataAccessException("Not Authorized") {
+            };
+        }
+
+        Optional<UserEntity> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
             throw new DataAccessException("This user cannot be found") {
             };
         }
-        return userRepository.findByEmail(email);
     }
 }

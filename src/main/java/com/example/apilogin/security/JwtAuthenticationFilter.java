@@ -1,5 +1,6 @@
 package com.example.apilogin.security;
 
+import com.example.apilogin.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        extractTokenFromRequest(request)
+        JwtUtils.extractTokenFromRequest(request)
                 .map(jwtDecoder::decode)
                 .map(jwtToPrincipalConverter::convert)
                 .map(UserPrincipalAuthToken::new)
