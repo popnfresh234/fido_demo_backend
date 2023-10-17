@@ -35,19 +35,6 @@ public class UserController {
     @GetMapping(path = "/")
 
     public @ResponseBody UserEntity getUser(@RequestHeader (name="Authorization") String token, @RequestParam Integer id) {
-        long currentId = -1;
-        Optional<String> jwtToken = JwtUtils.parseToken(token);
-        if(jwtToken.isPresent()){
-            DecodedJWT test = jwtDecoder.decode(jwtToken.get());
-            UserPrincipal principal= jwtToPrincipalConverter.convert(test);
-            currentId = principal.getUserId();
-        }
-
-        if(currentId != id){
-            throw new DataAccessException("Not Authorized") {
-            };
-        }
-
         Optional<UserEntity> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user.get();
