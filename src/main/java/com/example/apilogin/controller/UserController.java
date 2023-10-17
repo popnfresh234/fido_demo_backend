@@ -13,7 +13,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @CrossOrigin
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<UserEntity> getAllUsers() {
         // This returns a JSON or XML with the users
