@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                 .formLogin().disable()
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/", "/signup", "/auth/login", "/auth/test").permitAll()
+                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/test").permitAll()
                         .anyRequest().authenticated()
                 );
         http.cors();
