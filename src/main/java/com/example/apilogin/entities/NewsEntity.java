@@ -18,5 +18,6 @@ public class NewsEntity {
     private String title;
     @Column(name = "local_date", columnDefinition = "DATE")
     private LocalDate localDate;
+    @Column(columnDefinition = "TEXT")
     private String content;
 }
