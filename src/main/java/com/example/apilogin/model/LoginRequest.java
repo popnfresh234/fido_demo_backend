@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class LoginRequest {
+    //TODO:  Add validation front and back
     private String email;
     private String password;
 }
