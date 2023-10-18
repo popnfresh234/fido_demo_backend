@@ -24,10 +24,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception{
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(idFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(idFilter, BasicAuthenticationFilter.class);
         
         http
-//                .cors(cors->cors.disable())
                 .csrf(csrf->csrf.disable())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
