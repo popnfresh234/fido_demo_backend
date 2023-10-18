@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -51,11 +53,30 @@ public class AuthController {
     @PostMapping("/signup")
     public Response signup(@RequestParam String name,
                            @RequestParam String email,
-                           @RequestParam String password) {
+                           @RequestParam String password,
+                           @RequestParam String birthdate,
+                           @RequestParam String city,
+                           @RequestParam String district,
+                           @RequestParam String street,
+                           @RequestParam String alley,
+                           @RequestParam String lane,
+                           @RequestParam String floor
+    ) {
+
+        System.out.println("city");
         var user = new UserEntity();
         user.setName(name);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate date = LocalDate.parse(birthdate, formatter);
+        user.setBirthdate(date);
+        user.setCity(city);
+        user.setDistrict(district);
+        user.setStreet(street);
+        user.setAlley(alley);
+        user.setLane(lane);
+        user.setFloor(floor);
         user.setRole("ROLE_ADMIN");
         user.setExtraInfo(("My nice admin"));
         if(userRepository.findByEmail(email)!= null){

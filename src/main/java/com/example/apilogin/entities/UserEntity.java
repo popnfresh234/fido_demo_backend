@@ -24,9 +24,16 @@ public class UserEntity {
     private String password;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate birthDate;
+    private LocalDate birthdate;
 
-    private String address;
+//    Address
+    private String city;
+    private String district;
+    private String street;
+    private String alley;
+    private String lane;
+    private String floor;
+//    End address
 
     private String role;
     private String extraInfo;
