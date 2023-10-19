@@ -2,6 +2,9 @@ package com.example.apilogin.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,13 +19,17 @@ public class UserEntity {
     private  Long id;
 
     @Column(unique = true)
+    @NotBlank(message = "Email is mandatory")
     private  String email;
 
+    @NotBlank(message= "Name is mandatory")
     private String name;
 
     @JsonIgnore
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
+    @NotNull(message = "Birthdate is mandatory")
     @Column(columnDefinition = "DATE")
     private LocalDate birthdate;
 

@@ -1,17 +1,20 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserEntity;
-import com.example.apilogin.model.LoginRequest;
-import com.example.apilogin.model.LoginResponse;
-import com.example.apilogin.model.Response;
-import com.example.apilogin.model.SignupResponse;
+import com.example.apilogin.model.*;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,10 +27,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 @RestController
 @CrossOrigin
+@Validated
+
 @RequiredArgsConstructor
-@RequestMapping(path="/auth")
+@RequestMapping(path = "/auth")
 public class AuthController {
     private final JwtIssuer jwtIssuer;
     private final AuthenticationManager authenticationManager;
@@ -39,9 +45,7 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
 
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
@@ -49,25 +53,47 @@ public class AuthController {
         return new LoginResponse("Login Success", token);
     }
 
-
     @PostMapping("/signup")
-    public Response signup(@RequestParam String name,
-                           @RequestParam String email,
-                           @RequestParam String password,
-                           @RequestParam String birthdate,
-                           @RequestParam String city,
-                           @RequestParam String district,
-                           @RequestParam String street,
-                           @RequestParam String alley,
-                           @RequestParam String lane,
-                           @RequestParam String floor
-    ) {
+    public Response signup(
+            @Valid
+            @RequestParam
+            @NotEmpty(message = "Name must not be empty")
+            @Size(min = 1, message = "Name must be at least 1 char")
+            @Size(max = 20, message = "Name must not be greater than 20 chars")
+            String name,
 
-        System.out.println("city");
+            @NotEmpty(message = "Email must not be empty")
+            @Size(max = 50, message = "Email must be less than 50 chars")
+            @Valid @RequestParam String email,
+
+            @Valid
+            @RequestParam
+            @NotEmpty(message = "Password must not be empty")
+            @Size(min = 8, message = "Password must be at least 8 chars")
+            @Size(max = 20, message = "Password must not be greater than 20 chars")
+            @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$", message = "Password must meet reqs")
+            String password,
+
+            @NotEmpty(message = "Email must not be empty")
+
+            @Valid
+            @RequestParam
+            @NotEmpty(message = "Date must not be empty")
+            @Pattern(regexp = "^[12][0-9][0-9][0-9]/[01][0-9]/[0-3][0-9]$", message = "Date must match format yyyy/MM/dd")
+            String birthdate,
+
+
+            @RequestParam String city,
+            @RequestParam String district,
+            @RequestParam String street,
+            @RequestParam String alley,
+            @RequestParam String lane,
+            @RequestParam String floor) {
         var user = new UserEntity();
         user.setName(name);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(birthdate, formatter);
         user.setBirthdate(date);
@@ -79,12 +105,27 @@ public class AuthController {
         user.setFloor(floor);
         user.setRole("ROLE_ADMIN");
         user.setExtraInfo(("My nice admin"));
-        if(userRepository.findByEmail(email)!= null){
+        if (userRepository.findByEmail(email) != null) {
             throw new DataAccessException("This user already exists") {
             };
-        }else {
+        } else {
             userRepository.save(user);
             return new SignupResponse("Saved");
         }
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException e) {
+
+        List<String> errorMessages = e.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .toList();
+
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponse(errorMessages.toString()));
+
     }
 }
