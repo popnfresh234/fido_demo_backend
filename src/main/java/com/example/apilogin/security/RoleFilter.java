@@ -29,7 +29,7 @@ import java.util.Optional;
 public class RoleFilter extends OncePerRequestFilter {
     private final JwtDecoder jwtDecoder;
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
-    private final RequestMatcher matcher = new AntPathRequestMatcher("/user/**");
+    private final RequestMatcher matcher = new AntPathRequestMatcher("/edit/**");
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         int id = -1;

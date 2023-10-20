@@ -922,3 +922,52 @@
 2023-10-20T00:29:49.604-07:00  INFO 37018 --- [http-nio-8080-exec-3] c.e.a.c.NewsController                   : GET /news/paging
 2023-10-20T00:29:49.767-07:00  INFO 37018 --- [http-nio-8080-exec-4] c.e.a.c.NewsController                   : GET /news/paging
 2023-10-20T00:29:49.931-07:00  INFO 37018 --- [http-nio-8080-exec-5] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:30:26.908-07:00  INFO 37018 --- [http-nio-8080-exec-6] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:30:32.650-07:00  INFO 37018 --- [http-nio-8080-exec-7] c.e.a.c.AuthController                   : POST /login
+2023-10-20T00:30:32.727-07:00  INFO 37018 --- [http-nio-8080-exec-8] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:30:33.556-07:00  INFO 37018 --- [http-nio-8080-exec-9] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:31:07.119-07:00  INFO 37018 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-20T00:31:07.120-07:00  INFO 37018 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-20T00:31:07.130-07:00  INFO 37018 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-10-20T00:31:08.751-07:00  INFO 41249 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 41249 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-20T00:31:08.755-07:00 DEBUG 41249 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-20T00:31:08.755-07:00  INFO 41249 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-20T00:31:09.201-07:00  INFO 41249 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-20T00:31:09.238-07:00  INFO 41249 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 3 JPA repository interfaces.
+2023-10-20T00:31:09.493-07:00  INFO 41249 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-20T00:31:09.500-07:00  INFO 41249 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-20T00:31:09.501-07:00  INFO 41249 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-20T00:31:09.541-07:00  INFO 41249 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-20T00:31:09.542-07:00  INFO 41249 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 767 ms
+2023-10-20T00:31:09.574-07:00 DEBUG 41249 --- [main] c.e.a.s.JwtAuthenticationFilter          : Filter 'jwtAuthenticationFilter' configured for use
+2023-10-20T00:31:09.575-07:00 DEBUG 41249 --- [main] c.e.a.s.IdFilter                         : Filter 'idFilter' configured for use
+2023-10-20T00:31:09.575-07:00 DEBUG 41249 --- [main] c.e.a.s.RoleFilter                       : Filter 'roleFilter' configured for use
+2023-10-20T00:31:09.608-07:00  INFO 41249 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-20T00:31:09.775-07:00  INFO 41249 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5b742bc8
+2023-10-20T00:31:09.776-07:00  INFO 41249 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-20T00:31:09.834-07:00  INFO 41249 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-20T00:31:09.858-07:00  INFO 41249 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-20T00:31:09.859-07:00  INFO 41249 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-20T00:31:09.921-07:00  INFO 41249 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-20T00:31:09.990-07:00  INFO 41249 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-20T00:31:10.124-07:00  INFO 41249 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-20T00:31:10.441-07:00  INFO 41249 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-20T00:31:10.463-07:00  INFO 41249 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-20T00:31:10.616-07:00  WARN 41249 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-20T00:31:10.798-07:00  INFO 41249 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@34907a49, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4b8c9729, org.springframework.security.web.context.SecurityContextHolderFilter@798753cc, org.springframework.security.web.header.HeaderWriterFilter@33de9d85, org.springframework.web.filter.CorsFilter@1ae26c59, org.springframework.security.web.authentication.logout.LogoutFilter@6a7cbeed, com.example.apilogin.security.JwtAuthenticationFilter@1de4bee0, com.example.apilogin.security.IdFilter@d13960e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@77902ed6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6f53f5a4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@15ade272, org.springframework.security.web.session.SessionManagementFilter@24455d50, org.springframework.security.web.access.ExceptionTranslationFilter@c10f7a8, org.springframework.security.web.access.intercept.AuthorizationFilter@5cb64b9c]
+2023-10-20T00:31:10.905-07:00  INFO 41249 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-20T00:31:10.910-07:00  INFO 41249 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 2.386 seconds (process running for 2.725)
+2023-10-20T00:31:16.087-07:00  INFO 41249 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-20T00:31:16.087-07:00  INFO 41249 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-20T00:31:16.088-07:00  INFO 41249 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 0 ms
+2023-10-20T00:31:16.153-07:00  INFO 41249 --- [http-nio-8080-exec-1] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:31:16.754-07:00  INFO 41249 --- [http-nio-8080-exec-2] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:31:18.060-07:00  INFO 41249 --- [http-nio-8080-exec-3] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:31:18.674-07:00  INFO 41249 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:31:19.456-07:00  INFO 41249 --- [http-nio-8080-exec-5] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:31:24.006-07:00  INFO 41249 --- [http-nio-8080-exec-6] c.e.a.c.AuthController                   : POST /login
+2023-10-20T00:31:24.168-07:00  INFO 41249 --- [http-nio-8080-exec-7] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:31:25.392-07:00  INFO 41249 --- [http-nio-8080-exec-8] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:31:26.566-07:00  INFO 41249 --- [http-nio-8080-exec-9] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-20T00:31:27.441-07:00  INFO 41249 --- [http-nio-8080-exec-10] c.e.a.c.UserController                   : GET /user/:id
+2023-10-20T00:31:28.589-07:00  INFO 41249 --- [http-nio-8080-exec-1] c.e.a.c.NewsController                   : GET /news/paging
