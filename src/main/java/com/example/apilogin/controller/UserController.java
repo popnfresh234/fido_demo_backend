@@ -8,6 +8,7 @@ import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@Log4j2
 @RequestMapping(path = "/user")
 @RequiredArgsConstructor
 
@@ -27,13 +29,14 @@ public class UserController {
 
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<UserEntity> getAllUsers() {
+        log.info("GET /user/all");
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
 
     @GetMapping(path = "/")
-
-    public @ResponseBody UserEntity getUser(@RequestHeader (name="Authorization") String token, @RequestParam Integer id) {
+    public @ResponseBody UserEntity getUser(@RequestParam Integer id) {
+        log.info("GET /user/:id");
         Optional<UserEntity> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user.get();

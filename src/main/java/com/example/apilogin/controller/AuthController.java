@@ -10,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @Validated
-
+@Log4j2
 @RequiredArgsConstructor
 @RequestMapping(path = "/auth")
 public class AuthController {
@@ -44,7 +45,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-        System.out.println(request.getEmail());
+        log.info("POST /login");
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
@@ -88,6 +89,7 @@ public class AuthController {
             @RequestParam String alley,
             @RequestParam String lane,
             @RequestParam String floor) {
+        log.info("POST /signup");
         var user = new UserEntity();
         user.setName(name);
         user.setEmail(email);
@@ -107,6 +109,7 @@ public class AuthController {
 
         Optional<UserEntity> foundUser = userRepository.findByEmail(email);
         if(foundUser.isPresent()){
+            log.error("POST /signup User Already Exists");
             throw new DataAccessException("This user already exists") {};
         } else {
             userRepository.save(user);
