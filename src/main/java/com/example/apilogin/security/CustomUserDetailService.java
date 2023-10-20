@@ -1,9 +1,11 @@
 package com.example.apilogin.security;
 
+import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -21,25 +24,16 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-//        var user = userService.findByEmail(username).orElseThrow();
-//        return UserPrincipal.builder()
-//                .userId(user.getId())
-//                .email(user.getEmail())
-//                .authorities(List.of(new SimpleGrantedAuthority(user.getRole())))
-//                .password(user.getPassword())
-//                .build();
-        try {
-            var user = userRepository.findByEmail(username);
+        Optional<UserEntity> user = userRepository.findByEmail(username);
+        if (user.isPresent()) {
             return UserPrincipal.builder()
-                    .userId(user.getId())
-                    .email(user.getEmail())
-                    .authorities(List.of(new SimpleGrantedAuthority(user.getRole())))
-                    .password(user.getPassword())
+                    .userId(user.get().getId())
+                    .email(user.get().getEmail())
+                    .authorities(List.of(new SimpleGrantedAuthority(user.get().getRole())))
+                    .password(user.get().getPassword())
                     .build();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }else {
+            throw new DataAccessException("This user cannot be found"){};
         }
-        return null;
     }
 }

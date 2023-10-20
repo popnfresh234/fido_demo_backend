@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 
 public class UserController {
-    private final JwtDecoder jwtDecoder;
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
     private UserRepository userRepository;
