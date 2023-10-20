@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -103,12 +104,13 @@ public class AuthController {
         user.setFloor(floor);
         user.setRole("ROLE_ADMIN");
         user.setExtraInfo(("My nice admin"));
-        if (userRepository.findByEmail(email) != null) {
-            throw new DataAccessException("This user already exists") {
-            };
+
+        Optional<UserEntity> foundUser = userRepository.findByEmail(email);
+        if(foundUser.isPresent()){
+            throw new DataAccessException("This user already exists") {};
         } else {
             userRepository.save(user);
-            return new SignupResponse("Saved");
+            return new SignupResponse("New user added!");
         }
     }
 

@@ -33,6 +33,7 @@ public class CustomUserDetailService implements UserDetailsService {
                     .password(user.get().getPassword())
                     .build();
         }else {
+            System.out.println(this.getClass());
             throw new DataAccessException("This user cannot be found"){};
         }
     }

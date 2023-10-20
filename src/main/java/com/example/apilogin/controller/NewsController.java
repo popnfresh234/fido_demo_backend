@@ -2,10 +2,12 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.NewsEntity;
 import com.example.apilogin.service.NewsRepository;
+import com.example.apilogin.service.PagingNewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +38,8 @@ public class NewsController {
 
     @GetMapping(path = "/paging")
     public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(@RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize) {
-            List<NewsEntity> newsItems = new ArrayList<NewsEntity>();
-            Pageable paging = PageRequest.of(pageNumber,pageSize);
+            List<NewsEntity> newsItems;
+            Pageable paging = PageRequest.of(pageNumber,pageSize, Sort.by("localDate").descending());
             Page<NewsEntity> pageNews;
             pageNews = pagingNewsRepository.findAll(paging);
             newsItems = pageNews.getContent();
