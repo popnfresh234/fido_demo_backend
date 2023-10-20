@@ -8,11 +8,13 @@ import lombok.Setter;
 @Setter
 public class LoginResponse extends Response{
     String accessToken;
+    String role;
     public LoginResponse(String message) {
         super(message);
     }
-    public LoginResponse(String message, String accessToken) {
+    public LoginResponse(String message, String accessToken, String role) {
         super(message);
         this.accessToken = accessToken;
+        this.role = role;
     }
 }

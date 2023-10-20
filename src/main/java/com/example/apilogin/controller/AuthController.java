@@ -50,7 +50,7 @@ public class AuthController {
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
-        return new LoginResponse("Login Success", token);
+        return new LoginResponse("Login Success", token, roles.get(0));
     }
 
     @PostMapping("/signup")

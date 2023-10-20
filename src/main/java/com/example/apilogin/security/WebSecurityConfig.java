@@ -28,9 +28,10 @@ public class WebSecurityConfig {
         
         http
                 .csrf(csrf->csrf.disable())
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().disable()
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .formLogin(formLogin->formLogin.disable())
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/test").permitAll()
