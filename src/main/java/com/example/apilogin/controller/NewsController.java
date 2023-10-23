@@ -1,12 +1,15 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.NewsEntity;
+import com.example.apilogin.model.DeleteRequest;
+import com.example.apilogin.model.Response;
 import com.example.apilogin.service.NewsRepository;
 import com.example.apilogin.service.PagingNewsRepository;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
 import org.springframework.data.domain.Page;
@@ -48,6 +51,17 @@ public class NewsController {
     @GetMapping(path = "/paging")
     public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(@RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize) {
         log.info("GET /news/paging");
+        return buildResponse(pageNumber, pageSize);
+    }
+
+    @PostMapping(path = "/delete")
+    public ResponseEntity<Map<String, Object>> deleteNewsItems(@RequestBody Integer[] deleteArray, @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize ) {
+        log.info("POST /news/delete");
+        pagingNewsRepository.deleteAllById(Arrays.asList(deleteArray));
+        return buildResponse(pageNumber, pageSize);
+    }
+
+    private ResponseEntity<Map<String, Object>> buildResponse(Integer pageNumber, Integer pageSize){
         List<NewsEntity> newsItems;
         Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by("localDate").descending());
         Page<NewsEntity> pageNews;
