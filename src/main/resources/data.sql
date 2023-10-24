@@ -1,3 +1,5 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 INSERT IGNORE INTO db_example.news_entity
 (id, content, local_date, source, title)
 VALUES(-1, 'Israel has been in near-constant armed conflict with Palestinians since that state was proclaimed in 1948. For three-quarters of a century, the two sides have been trying to outsmart and outgun each other. The first step in that is to know one’s enemy.
@@ -176,5 +178,5 @@ An exit poll by Ipsos and partial results suggested that voters had grown tired 
 
 
 INSERT IGNORE INTO db_example.user_entity
-(id, alley, birthdate, city, district, email, extra_info, floor, lane, name, password, `role`, street)
-VALUES(-1, '12', '1985-04-30', '台北', '松山', 'ajhollid@gmail.com', 'My nice admin', '5F', '52', 'Alex', '$2a$10$g6YCb3RgEwe9arwxhimcv.mTJn5jsknxCA0V.Xu2h/WDTGZprLYYC', 'ROLE_ADMIN', '八德路');
+(id, account, alley, birthdate, city, district, email, extra_info, floor, lane, name, password, `role`, street)
+VALUES(-1, '123abc', '12', '1985-04-30', '台北市', '松山區', 'ajhollid@gmail.com', 'My nice admin', '5F', '52', 'Alex', '$2a$10$g6YCb3RgEwe9arwxhimcv.mTJn5jsknxCA0V.Xu2h/WDTGZprLYYC', 'ROLE_ADMIN', '八德路');

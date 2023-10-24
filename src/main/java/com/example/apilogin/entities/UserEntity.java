@@ -19,6 +19,10 @@ public class UserEntity {
     private  Long id;
 
     @Column(unique = true)
+    @NotBlank(message = "Account number is mandatory")
+    private String account;
+
+    @Column(unique = true)
     @NotBlank(message = "Email is mandatory")
     private  String email;
 
