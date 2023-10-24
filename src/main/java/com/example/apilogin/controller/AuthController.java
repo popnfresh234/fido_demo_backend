@@ -118,6 +118,26 @@ public class AuthController {
         }
     }
 
+    @PostMapping(path="/recovery")
+    public Response recoverAccount(
+            @RequestParam
+            @NotEmpty(message = "Account number must not be empty")
+            @Size(min = 2, message = "Account number must be at least two chars")
+            @Size(max = 20, message = "Account number must not be greater than 20 chars")
+            @Pattern(regexp = "^[a-zA-Z0-9]*$")
+            String account){
+        log.info("POST /recovery");
+        Optional<UserEntity> userOptional= userRepository.findByAccount(account);
+        if(userOptional.isPresent()){
+            UserEntity user = userOptional.get();
+            log.info("Found a user, should send recovery email to: " + user.getEmail());
+            return new Response("Found a user, should send recovery email to:" + user.getEmail());
+        }else {
+            throw new DataAccessException("Cannot find a user with this ID") {
+            };
+        }
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException e) {
 
