@@ -20,12 +20,13 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class WebSecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final IdFilter idFilter;
+    private final RoleFilter roleFilter;
     private final CustomUserDetailService customUserDetailService;
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception{
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(idFilter, BasicAuthenticationFilter.class);
-        
+        http.addFilterBefore(roleFilter, BasicAuthenticationFilter.class);
         http
                 .csrf(csrf->csrf.disable())
                 .sessionManagement((session) -> session

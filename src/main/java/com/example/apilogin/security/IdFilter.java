@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import java.io.OutputStream;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Log4j2
 @Component
 public class IdFilter extends OncePerRequestFilter {
     private final JwtDecoder jwtDecoder;
@@ -36,7 +38,7 @@ public class IdFilter extends OncePerRequestFilter {
        Optional<UserPrincipal> principal =   JwtUtils.extractTokenFromRequest(request)
                 .map(jwtDecoder::decode)
                 .map(jwtToPrincipalConverter::convert);
-
+       log.info("ID Filter");
        if(principal.isPresent() && !principal.get().getUserId().toString().equals(request.getParameter("id"))){
            ErrorResponse e = new ErrorResponse("Not Authorized");
            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

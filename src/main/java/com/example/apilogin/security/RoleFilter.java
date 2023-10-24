@@ -29,14 +29,14 @@ import java.util.Optional;
 public class RoleFilter extends OncePerRequestFilter {
     private final JwtDecoder jwtDecoder;
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
-    private final RequestMatcher matcher = new AntPathRequestMatcher("/edit/**");
+    private final RequestMatcher matcher = new AntPathRequestMatcher("/news/delete/**");
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         int id = -1;
        Optional<UserPrincipal> principal =   JwtUtils.extractTokenFromRequest(request)
                 .map(jwtDecoder::decode)
                 .map(jwtToPrincipalConverter::convert);
-
+       log.info("Role Filter");
        if(principal.isPresent()){
            String role = String.valueOf(principal.get().getAuthorities().iterator().next());
             if(!role.equals("ROLE_ADMIN")){
