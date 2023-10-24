@@ -2328,3 +2328,172 @@
 2023-10-22T22:00:36.247-07:00  INFO 25582 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-10-22T22:00:36.248-07:00  INFO 25582 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
 2023-10-22T22:00:36.251-07:00  INFO 25582 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-10-23T18:39:01.859-07:00  INFO 7007 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 7007 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-23T18:39:01.864-07:00 DEBUG 7007 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-23T18:39:01.866-07:00  INFO 7007 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-23T18:39:02.495-07:00  INFO 7007 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-23T18:39:02.536-07:00  INFO 7007 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 3 JPA repository interfaces.
+2023-10-23T18:39:02.907-07:00  INFO 7007 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-23T18:39:02.916-07:00  INFO 7007 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-23T18:39:02.916-07:00  INFO 7007 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-23T18:39:02.978-07:00  INFO 7007 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-23T18:39:02.978-07:00  INFO 7007 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1082 ms
+2023-10-23T18:39:03.019-07:00 DEBUG 7007 --- [main] c.e.a.s.JwtAuthenticationFilter          : Filter 'jwtAuthenticationFilter' configured for use
+2023-10-23T18:39:03.020-07:00 DEBUG 7007 --- [main] c.e.a.s.IdFilter                         : Filter 'idFilter' configured for use
+2023-10-23T18:39:03.020-07:00 DEBUG 7007 --- [main] c.e.a.s.RoleFilter                       : Filter 'roleFilter' configured for use
+2023-10-23T18:39:03.072-07:00  INFO 7007 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-23T18:39:03.353-07:00  INFO 7007 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@18cf5c52
+2023-10-23T18:39:03.355-07:00  INFO 7007 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-23T18:39:03.443-07:00  INFO 7007 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-23T18:39:03.492-07:00  INFO 7007 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-23T18:39:03.494-07:00  INFO 7007 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-23T18:39:03.623-07:00  INFO 7007 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T18:39:03.751-07:00  INFO 7007 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-23T18:39:03.957-07:00  INFO 7007 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T18:39:04.436-07:00  INFO 7007 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-23T18:39:04.471-07:00  INFO 7007 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T18:39:04.712-07:00  WARN 7007 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-23T18:39:04.961-07:00  INFO 7007 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@7d741200, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@36e11b60, org.springframework.security.web.context.SecurityContextHolderFilter@2bbaf1bc, org.springframework.security.web.header.HeaderWriterFilter@4c376b44, org.springframework.web.filter.CorsFilter@71d8794f, org.springframework.security.web.authentication.logout.LogoutFilter@15ade272, com.example.apilogin.security.JwtAuthenticationFilter@3dc40ab9, com.example.apilogin.security.IdFilter@4872669f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@47462daf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@54a5eff, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6af02de0, org.springframework.security.web.session.SessionManagementFilter@5ab29866, org.springframework.security.web.access.ExceptionTranslationFilter@7325b786, org.springframework.security.web.access.intercept.AuthorizationFilter@6347f9cc]
+2023-10-23T18:39:05.141-07:00  INFO 7007 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-23T18:39:05.152-07:00  INFO 7007 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 3.648 seconds (process running for 4.272)
+2023-10-23T18:39:23.448-07:00  INFO 7007 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-23T18:39:23.448-07:00  INFO 7007 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-23T18:39:23.449-07:00  INFO 7007 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2023-10-23T18:39:23.553-07:00  INFO 7007 --- [http-nio-8080-exec-2] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-23T18:39:27.432-07:00  INFO 7007 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:40:29.923-07:00  INFO 7007 --- [http-nio-8080-exec-6] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:40:47.398-07:00  INFO 7007 --- [http-nio-8080-exec-7] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:40:53.984-07:00  INFO 7007 --- [http-nio-8080-exec-8] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:41:29.962-07:00  INFO 7007 --- [http-nio-8080-exec-9] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:41:53.388-07:00  INFO 7007 --- [http-nio-8080-exec-10] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:42:13.424-07:00  INFO 7007 --- [http-nio-8080-exec-1] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:42:40.631-07:00  INFO 7007 --- [http-nio-8080-exec-2] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:42:53.674-07:00  INFO 7007 --- [http-nio-8080-exec-3] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:43:08.152-07:00  INFO 7007 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:43:17.077-07:00  INFO 7007 --- [http-nio-8080-exec-5] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T18:55:33.082-07:00  INFO 7007 --- [http-nio-8080-exec-7] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:00:49.949-07:00  INFO 7007 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:00:49.953-07:00  INFO 7007 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-23T19:00:49.963-07:00  INFO 7007 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-10-23T19:00:55.457-07:00  INFO 9004 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 9004 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-23T19:00:55.466-07:00 DEBUG 9004 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-23T19:00:55.467-07:00  INFO 9004 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-23T19:00:56.174-07:00  INFO 9004 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-23T19:00:56.226-07:00  INFO 9004 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 46 ms. Found 3 JPA repository interfaces.
+2023-10-23T19:00:56.700-07:00  INFO 9004 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-23T19:00:56.711-07:00  INFO 9004 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-23T19:00:56.712-07:00  INFO 9004 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-23T19:00:56.779-07:00  INFO 9004 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-23T19:00:56.780-07:00  INFO 9004 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1259 ms
+2023-10-23T19:00:56.834-07:00 DEBUG 9004 --- [main] c.e.a.s.JwtAuthenticationFilter          : Filter 'jwtAuthenticationFilter' configured for use
+2023-10-23T19:00:56.836-07:00 DEBUG 9004 --- [main] c.e.a.s.IdFilter                         : Filter 'idFilter' configured for use
+2023-10-23T19:00:56.837-07:00 DEBUG 9004 --- [main] c.e.a.s.RoleFilter                       : Filter 'roleFilter' configured for use
+2023-10-23T19:00:56.893-07:00  INFO 9004 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-23T19:00:57.233-07:00  INFO 9004 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6ef4cbe1
+2023-10-23T19:00:57.235-07:00  INFO 9004 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-23T19:00:57.340-07:00  INFO 9004 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-23T19:00:57.395-07:00  INFO 9004 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-23T19:00:57.397-07:00  INFO 9004 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-23T19:00:57.559-07:00  INFO 9004 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:00:57.683-07:00  INFO 9004 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-23T19:00:57.923-07:00  INFO 9004 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:00:58.551-07:00  INFO 9004 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-23T19:00:58.622-07:00  INFO 9004 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:00:59.025-07:00  WARN 9004 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-23T19:00:59.445-07:00  INFO 9004 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@69862a1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@585718dd, org.springframework.security.web.context.SecurityContextHolderFilter@7860a014, org.springframework.security.web.header.HeaderWriterFilter@5f5076f9, org.springframework.web.filter.CorsFilter@5a644d75, org.springframework.security.web.authentication.logout.LogoutFilter@5cb64b9c, com.example.apilogin.security.JwtAuthenticationFilter@51da32e5, com.example.apilogin.security.IdFilter@3cc79c02, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@76b6bad3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c376b44, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6347f9cc, org.springframework.security.web.session.SessionManagementFilter@6f53f5a4, org.springframework.security.web.access.ExceptionTranslationFilter@77902ed6, org.springframework.security.web.access.intercept.AuthorizationFilter@4b8c9729]
+2023-10-23T19:00:59.619-07:00  INFO 9004 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-23T19:00:59.628-07:00  INFO 9004 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 4.673 seconds (process running for 5.596)
+2023-10-23T19:05:02.532-07:00  INFO 9004 --- [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-23T19:05:02.533-07:00  INFO 9004 --- [http-nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-23T19:05:02.536-07:00  INFO 9004 --- [http-nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Completed initialization in 3 ms
+2023-10-23T19:05:02.733-07:00  INFO 9004 --- [http-nio-8080-exec-2] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:05:48.768-07:00  INFO 9004 --- [http-nio-8080-exec-1] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:06:06.431-07:00  INFO 9004 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:06:11.999-07:00  INFO 9004 --- [http-nio-8080-exec-3] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:06:35.519-07:00  INFO 9004 --- [http-nio-8080-exec-5] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:06:43.047-07:00  INFO 9004 --- [http-nio-8080-exec-6] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:07:10.413-07:00  INFO 9004 --- [http-nio-8080-exec-8] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:07:19.765-07:00  INFO 9004 --- [http-nio-8080-exec-7] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:07:22.642-07:00 ERROR 9004 --- [http-nio-8080-exec-10] c.e.a.c.JsonExceptionHandler             : Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; For input string: "1name=Alex"
+2023-10-23T19:07:52.924-07:00  INFO 9004 --- [http-nio-8080-exec-2] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:07:54.879-07:00 ERROR 9004 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : 1
+2023-10-23T19:07:54.880-07:00 ERROR 9004 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : Alex
+2023-10-23T19:08:53.472-07:00  INFO 9004 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:08:53.475-07:00  INFO 9004 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-23T19:08:53.486-07:00  INFO 9004 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-10-23T19:08:57.162-07:00  INFO 9962 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 9962 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-23T19:08:57.171-07:00 DEBUG 9962 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-23T19:08:57.174-07:00  INFO 9962 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-23T19:08:57.910-07:00  INFO 9962 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-23T19:08:57.967-07:00  INFO 9962 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 3 JPA repository interfaces.
+2023-10-23T19:08:58.433-07:00  INFO 9962 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-23T19:08:58.444-07:00  INFO 9962 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-23T19:08:58.444-07:00  INFO 9962 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-23T19:08:58.528-07:00  INFO 9962 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-23T19:08:58.529-07:00  INFO 9962 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1304 ms
+2023-10-23T19:08:58.581-07:00 DEBUG 9962 --- [main] c.e.a.s.JwtAuthenticationFilter          : Filter 'jwtAuthenticationFilter' configured for use
+2023-10-23T19:08:58.581-07:00 DEBUG 9962 --- [main] c.e.a.s.IdFilter                         : Filter 'idFilter' configured for use
+2023-10-23T19:08:58.582-07:00 DEBUG 9962 --- [main] c.e.a.s.RoleFilter                       : Filter 'roleFilter' configured for use
+2023-10-23T19:08:58.650-07:00  INFO 9962 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-23T19:08:59.015-07:00  INFO 9962 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@282c4da0
+2023-10-23T19:08:59.017-07:00  INFO 9962 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-23T19:08:59.118-07:00  INFO 9962 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-23T19:08:59.171-07:00  INFO 9962 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-23T19:08:59.175-07:00  INFO 9962 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-23T19:08:59.346-07:00  INFO 9962 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:08:59.477-07:00  INFO 9962 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-23T19:08:59.715-07:00  INFO 9962 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:09:00.267-07:00  INFO 9962 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-23T19:09:00.320-07:00  INFO 9962 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:09:00.599-07:00  WARN 9962 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-23T19:09:00.890-07:00  INFO 9962 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@969c2f9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7bbc11ed, org.springframework.security.web.context.SecurityContextHolderFilter@74cad577, org.springframework.security.web.header.HeaderWriterFilter@7325b786, org.springframework.web.filter.CorsFilter@7d741200, org.springframework.security.web.authentication.logout.LogoutFilter@4b8c9729, com.example.apilogin.security.JwtAuthenticationFilter@186d8a71, com.example.apilogin.security.IdFilter@1fecfaea, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2bbaf1bc, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3f36c191, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@36e11b60, org.springframework.security.web.session.SessionManagementFilter@4c376b44, org.springframework.security.web.access.ExceptionTranslationFilter@76b6bad3, org.springframework.security.web.access.intercept.AuthorizationFilter@585718dd]
+2023-10-23T19:09:01.096-07:00  INFO 9962 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-23T19:09:01.108-07:00  INFO 9962 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 4.486 seconds (process running for 5.246)
+2023-10-23T19:09:04.550-07:00  INFO 9962 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-23T19:09:04.550-07:00  INFO 9962 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-23T19:09:04.552-07:00  INFO 9962 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2023-10-23T19:09:04.712-07:00 ERROR 9962 --- [http-nio-8080-exec-1] c.e.a.c.UserController                   : Alex
+2023-10-23T19:21:56.780-07:00 ERROR 9962 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : Alex
+2023-10-23T19:22:03.007-07:00  INFO 9962 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:22:03.011-07:00  INFO 9962 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-23T19:22:03.022-07:00  INFO 9962 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-10-23T19:22:06.726-07:00  INFO 10509 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 10509 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-23T19:22:06.737-07:00 DEBUG 10509 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-23T19:22:06.739-07:00  INFO 10509 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-23T19:22:07.410-07:00  INFO 10509 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-23T19:22:07.461-07:00  INFO 10509 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 3 JPA repository interfaces.
+2023-10-23T19:22:07.979-07:00  INFO 10509 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-23T19:22:07.995-07:00  INFO 10509 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-23T19:22:07.996-07:00  INFO 10509 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-23T19:22:08.096-07:00  INFO 10509 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-23T19:22:08.097-07:00  INFO 10509 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1308 ms
+2023-10-23T19:22:08.161-07:00 DEBUG 10509 --- [main] c.e.a.s.JwtAuthenticationFilter          : Filter 'jwtAuthenticationFilter' configured for use
+2023-10-23T19:22:08.162-07:00 DEBUG 10509 --- [main] c.e.a.s.IdFilter                         : Filter 'idFilter' configured for use
+2023-10-23T19:22:08.163-07:00 DEBUG 10509 --- [main] c.e.a.s.RoleFilter                       : Filter 'roleFilter' configured for use
+2023-10-23T19:22:08.290-07:00  INFO 10509 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-23T19:22:08.664-07:00  INFO 10509 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@282c4da0
+2023-10-23T19:22:08.666-07:00  INFO 10509 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-23T19:22:08.789-07:00  INFO 10509 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-23T19:22:08.843-07:00  INFO 10509 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-23T19:22:08.847-07:00  INFO 10509 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-23T19:22:09.027-07:00  INFO 10509 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:22:09.152-07:00  INFO 10509 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-23T19:22:09.400-07:00  INFO 10509 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-23T19:22:09.984-07:00  INFO 10509 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-23T19:22:10.035-07:00  INFO 10509 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-23T19:22:10.341-07:00  WARN 10509 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-23T19:22:10.674-07:00  INFO 10509 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@969c2f9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7bbc11ed, org.springframework.security.web.context.SecurityContextHolderFilter@74cad577, org.springframework.security.web.header.HeaderWriterFilter@7325b786, org.springframework.web.filter.CorsFilter@7d741200, org.springframework.security.web.authentication.logout.LogoutFilter@4b8c9729, com.example.apilogin.security.JwtAuthenticationFilter@186d8a71, com.example.apilogin.security.IdFilter@1fecfaea, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2bbaf1bc, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3f36c191, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@36e11b60, org.springframework.security.web.session.SessionManagementFilter@4c376b44, org.springframework.security.web.access.ExceptionTranslationFilter@76b6bad3, org.springframework.security.web.access.intercept.AuthorizationFilter@585718dd]
+2023-10-23T19:22:10.856-07:00  INFO 10509 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-23T19:22:10.867-07:00  INFO 10509 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 4.672 seconds (process running for 5.408)
+2023-10-23T19:22:13.302-07:00  INFO 10509 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-23T19:22:13.303-07:00  INFO 10509 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-23T19:22:13.305-07:00  INFO 10509 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 2 ms
+2023-10-23T19:22:13.422-07:00  INFO 10509 --- [http-nio-8080-exec-1] c.e.a.c.UserController                   : POST /user
+2023-10-23T19:22:49.391-07:00  INFO 10509 --- [http-nio-8080-exec-5] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:22:52.900-07:00  INFO 10509 --- [http-nio-8080-exec-4] c.e.a.c.UserController                   : POST /user
+2023-10-23T19:22:53.680-07:00  INFO 10509 --- [http-nio-8080-exec-6] c.e.a.c.UserController                   : POST /user
+2023-10-23T19:23:09.482-07:00  INFO 10509 --- [http-nio-8080-exec-3] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:23:12.736-07:00  INFO 10509 --- [http-nio-8080-exec-8] c.e.a.c.UserController                   : POST /user
+2023-10-23T19:23:15.490-07:00  INFO 10509 --- [http-nio-8080-exec-9] c.e.a.c.UserController                   : GET /user/:id
+2023-10-23T19:23:21.075-07:00  INFO 10509 --- [http-nio-8080-exec-1] c.e.a.c.UserController                   : POST /user
+2023-10-23T19:23:39.603-07:00  INFO 10509 --- [http-nio-8080-exec-2] c.e.a.c.UserController                   : POST /user

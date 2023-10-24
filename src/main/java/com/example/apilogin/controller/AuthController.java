@@ -91,26 +91,17 @@ public class AuthController {
             @RequestParam String floor) {
         log.info("POST /signup");
         var user = new UserEntity();
-        user.setName(name);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate date = LocalDate.parse(birthdate, formatter);
-        user.setBirthdate(date);
-        user.setCity(city);
-        user.setDistrict(district);
-        user.setStreet(street);
-        user.setAlley(alley);
-        user.setLane(lane);
-        user.setFloor(floor);
-        user.setRole("ROLE_ADMIN");
-        user.setExtraInfo(("My nice admin"));
+        UserController.setUserData(user, name, birthdate, city, district, street, alley, lane, floor);
+        user.setRole("ROLE_USER");
+        user.setExtraInfo(("A user"));
 
         Optional<UserEntity> foundUser = userRepository.findByEmail(email);
-        if(foundUser.isPresent()){
+        if (foundUser.isPresent()) {
             log.error("POST /signup User Already Exists");
-            throw new DataAccessException("This user already exists") {};
+            throw new DataAccessException("This user already exists") {
+            };
         } else {
             userRepository.save(user);
             return new SignupResponse("New user added!");
