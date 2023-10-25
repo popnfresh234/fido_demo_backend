@@ -118,12 +118,8 @@ public class AuthController {
             user.setExtraInfo(("A user"));
             var userRole = new RoleEntity();
             userRole.setRole("ROLE_USER");
-            var adminRole = new RoleEntity();
-            adminRole.setRole("ROLE_ADMIN");
             roleRepository.save(userRole);
-            roleRepository.save(adminRole);
             user.getRole().add(userRole);
-            user.getRole().add(adminRole);
             userRepository.save(user);
 
             return new SignupResponse("New user added!");

@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
+
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,5 +20,4 @@ public class RoleEntity {
 
     @NotBlank(message="Role is mandatory")
     private String role;
-
 }
