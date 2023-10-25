@@ -37,9 +37,9 @@ public class RoleFilter extends OncePerRequestFilter {
                 .map(jwtDecoder::decode)
                 .map(jwtToPrincipalConverter::convert);
        log.info("Role Filter");
+       log.error(principal.get().getAuthorities());
        if(principal.isPresent()){
-           String role = String.valueOf(principal.get().getAuthorities().iterator().next());
-            if(!role.equals("ROLE_ADMIN")){
+           if( principal.get().getAuthorities().contains("ROLE_ADMIN")){
                 ErrorResponse e = new ErrorResponse("Not Authorized");
                 response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);

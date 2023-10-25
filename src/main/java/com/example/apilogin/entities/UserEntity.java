@@ -9,11 +9,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  Long id;
@@ -46,7 +51,10 @@ public class UserEntity {
     private String floor;
 //    End address
 
-    private String role;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn
+    private Set<RoleEntity> role = new HashSet<>();
+
     private String extraInfo;
 
 }

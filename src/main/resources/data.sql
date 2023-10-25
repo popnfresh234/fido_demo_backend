@@ -178,5 +178,12 @@ An exit poll by Ipsos and partial results suggested that voters had grown tired 
 
 
 INSERT IGNORE INTO db_example.user_entity
-(id, account, alley, birthdate, city, district, email, extra_info, floor, lane, name, password, `role`, street)
-VALUES(-1, '123abc', '12', '1985-04-30', '台北市', '松山區', 'ajhollid@gmail.com', 'My nice admin', '5F', '52', 'Alex', '$2a$10$g6YCb3RgEwe9arwxhimcv.mTJn5jsknxCA0V.Xu2h/WDTGZprLYYC', 'ROLE_ADMIN', '八德路');
+(id, account, alley, birthdate, city, district, email, extra_info, floor, lane, name, password, street)
+VALUES(-1, 'alex123', '12', '1985-04-30', '台北市', '松山區', 'ajhollid@gmail.com', 'My nice admin', '5F', '52', 'Alex', '$2a$10$uJjT/jICqkwlG6gGSfz.uu2OyicX1PLWasRhDZ1x1lU6EvVZIS/2m', '八德路');
+
+INSERT IGNORE INTO db_example.role_entity
+(id, `role`, role_id)
+VALUES(-1, 'ROLE_ADMIN', -1);
+INSERT IGNORE INTO db_example.role_entity
+(id, `role`, role_id)
+VALUES(-2, 'ROLE_USER', -1);

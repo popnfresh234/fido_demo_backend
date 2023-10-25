@@ -1,9 +1,11 @@
 package com.example.apilogin.controller;
 
+import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.model.*;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
+import com.example.apilogin.service.RoleRepository;
 import com.example.apilogin.service.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -42,6 +44,8 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
@@ -50,7 +54,7 @@ public class AuthController {
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         var token = jwtIssuer.issue(principal.getUserId(), principal.getAccount(), roles);
-        return new LoginResponse("Login Success", token, roles.get(0));
+        return new LoginResponse("Login Success", token, roles);
     }
 
     @PostMapping("/signup")
@@ -99,13 +103,6 @@ public class AuthController {
             @RequestParam String lane,
             @RequestParam String floor) {
         log.info("POST /signup");
-        var user = new UserEntity();
-        user.setAccount(account);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        UserController.setUserData(user, name, birthdate, city, district, street, alley, lane, floor);
-        user.setRole("ROLE_USER");
-        user.setExtraInfo(("A user"));
 
         Optional<UserEntity> foundUser = userRepository.findByEmail(email);
         if (foundUser.isPresent()) {
@@ -113,7 +110,22 @@ public class AuthController {
             throw new DataAccessException("This user already exists") {
             };
         } else {
+            var user = new UserEntity();
+            user.setAccount(account);
+            user.setEmail(email);
+            user.setPassword(passwordEncoder.encode(password));
+            UserController.setUserData(user, name, birthdate, city, district, street, alley, lane, floor);
+            user.setExtraInfo(("A user"));
+            var userRole = new RoleEntity();
+            userRole.setRole("ROLE_USER");
+            var adminRole = new RoleEntity();
+            adminRole.setRole("ROLE_ADMIN");
+            roleRepository.save(userRole);
+            roleRepository.save(adminRole);
+            user.getRole().add(userRole);
+            user.getRole().add(adminRole);
             userRepository.save(user);
+
             return new SignupResponse("New user added!");
         }
     }
