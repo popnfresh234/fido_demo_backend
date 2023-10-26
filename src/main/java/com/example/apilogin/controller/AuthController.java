@@ -7,6 +7,7 @@ import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.RoleRepository;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.ImageUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -24,7 +25,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -101,9 +104,12 @@ public class AuthController {
             @RequestParam String street,
             @RequestParam String alley,
             @RequestParam String lane,
-            @RequestParam String floor) {
-        log.info("POST /signup");
+            @RequestParam String floor,
+            @RequestParam("image") MultipartFile file
+    ) throws IOException {
 
+
+        log.info("POST /signup");
         Optional<UserEntity> foundUser = userRepository.findByEmail(email);
         if (foundUser.isPresent()) {
             log.error("POST /signup User Already Exists");
@@ -120,27 +126,30 @@ public class AuthController {
             userRole.setRole("ROLE_USER");
             roleRepository.save(userRole);
             user.getRole().add(userRole);
+            if (file.getSize() > 0) {
+                user.setImage(file.getBytes());
+            }
             userRepository.save(user);
 
             return new SignupResponse("New user added!");
         }
     }
 
-    @PostMapping(path="/recovery")
+    @PostMapping(path = "/recovery")
     public Response recoverAccount(
             @RequestParam
             @NotEmpty(message = "Account number must not be empty")
             @Size(min = 2, message = "Account number must be at least two chars")
             @Size(max = 20, message = "Account number must not be greater than 20 chars")
             @Pattern(regexp = "^[a-zA-Z0-9]*$")
-            String account){
+            String account) {
         log.info("POST /recovery");
-        Optional<UserEntity> userOptional= userRepository.findByAccount(account);
-        if(userOptional.isPresent()){
+        Optional<UserEntity> userOptional = userRepository.findByAccount(account);
+        if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
             log.info("Found a user, should send recovery email to: " + user.getEmail());
             return new Response("Found a user, should send recovery email to:" + user.getEmail());
-        }else {
+        } else {
             throw new DataAccessException("Cannot find a user with this ID") {
             };
         }

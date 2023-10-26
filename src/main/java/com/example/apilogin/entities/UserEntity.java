@@ -57,4 +57,8 @@ public class UserEntity {
 
     private String extraInfo;
 
+    @Lob
+    @Column(length=100000)
+    private byte[] image;
+
 }

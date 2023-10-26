@@ -7,6 +7,7 @@ import com.example.apilogin.security.JwtDecoder;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.ImageUtils;
 import com.example.apilogin.utils.JwtUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,7 +19,9 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -81,12 +84,18 @@ public class UserController {
             @RequestParam String street,
             @RequestParam String alley,
             @RequestParam String lane,
-            @RequestParam String floor) {
+            @RequestParam String floor,
+            @RequestParam("image") MultipartFile file
+
+    ) throws IOException {
         log.info("POST /user");
         Optional<UserEntity> user = userRepository.findById((id));
-        if(user.isPresent()){
+        if (user.isPresent()) {
             UserEntity foundUser = user.get();
             setUserData(foundUser, name, birthdate, city, district, street, alley, lane, floor);
+            if (file.getSize() > 0) {
+                foundUser.setImage(file.getBytes());
+            }
             return userRepository.save(foundUser);
         } else {
             throw new DataAccessException("Something went wrong updating a user") {
@@ -94,7 +103,7 @@ public class UserController {
         }
     }
 
-    public static void setUserData(UserEntity user, String name, String birthdate, String city, String district, String street, String alley, String lane, String floor){
+    public static void setUserData(UserEntity user, String name, String birthdate, String city, String district, String street, String alley, String lane, String floor) {
         user.setName(name);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(birthdate, formatter);
