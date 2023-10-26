@@ -2,7 +2,6 @@ package com.example.apilogin.security;
 
 import com.example.apilogin.model.ErrorResponse;
 import com.example.apilogin.utils.JwtUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,16 +10,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -28,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Log4j2
 @Component
-public class IdFilter extends OncePerRequestFilter {
+public class AccountFilter extends OncePerRequestFilter {
     private final JwtDecoder jwtDecoder;
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     private final RequestMatcher matcher = new AntPathRequestMatcher("/user/**");
@@ -38,8 +34,8 @@ public class IdFilter extends OncePerRequestFilter {
        Optional<UserPrincipal> principal =   JwtUtils.extractTokenFromRequest(request)
                 .map(jwtDecoder::decode)
                 .map(jwtToPrincipalConverter::convert);
-       log.info("ID Filter");
-       if(principal.isPresent() && !principal.get().getUserId().toString().equals(request.getParameter("id"))){
+       log.info("Account Filter");
+       if(principal.isPresent() && !principal.get().getUsername().equals(request.getParameter("account"))){
            ErrorResponse e = new ErrorResponse("Not Authorized");
            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

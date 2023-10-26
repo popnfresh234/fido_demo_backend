@@ -38,18 +38,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<UserEntity> getAllUsers() {
-        log.info("GET /user/all");
-        // This returns a JSON or XML with the users
-        return userRepository.findAll();
-    }
-
     @GetMapping(path = "/")
-    public @ResponseBody UserEntity getUser(@RequestParam Integer id) {
-        log.info("GET /user/:id");
-        Optional<UserEntity> user = userRepository.findById(id);
+    public @ResponseBody UserEntity getUser(@RequestParam String account) {
+        log.info("GET /user/:account");
+        Optional<UserEntity> user = userRepository.findByAccount(account);
         if (user.isPresent()) {
+
             return user.get();
         } else {
             throw new DataAccessException("This user cannot be found") {
