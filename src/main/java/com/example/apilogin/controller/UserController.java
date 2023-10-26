@@ -58,6 +58,10 @@ public class UserController {
             @NotEmpty(message = "ID must not be empty")
             Integer id,
 
+            @RequestParam
+            @NotEmpty(message="Account must not be empty")
+            String account,
+
             @Valid
             @RequestParam
             @NotEmpty(message = "Name must not be empty")
