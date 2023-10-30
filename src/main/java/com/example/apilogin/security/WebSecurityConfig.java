@@ -57,7 +57,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**").permitAll()
                         .anyRequest().authenticated()
+
+
                 );
+        http.exceptionHandling().authenticationEntryPoint(new AuthFailureHandler());
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http.cors(Customizer.withDefaults());
         return http.build();

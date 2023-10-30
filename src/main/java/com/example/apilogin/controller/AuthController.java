@@ -7,6 +7,7 @@ import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.RoleRepository;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.MailUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -48,6 +49,8 @@ public class AuthController {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private MailUtils mailUtils;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
@@ -146,6 +149,9 @@ public class AuthController {
         Optional<UserEntity> userOptional = userRepository.findByAccount(account);
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
+            String subject = "Forgotten Password";
+            String message = "Hello " + user.getName() + ", you seem to have forgotten your password!";
+            mailUtils.sendEmail(user.getEmail(), subject, message);
             log.info("Found a user, should send recovery email to: " + user.getEmail());
             return new Response("Found a user, should send recovery email to:" + user.getEmail());
         } else {
