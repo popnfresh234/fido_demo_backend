@@ -1,25 +1,30 @@
 package com.example.apilogin.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtIssuer {
-    private final JwtProperties properties;
+    private final JwtEncoder jwtEncoder;
+
     public String issue(Long userId, String account, List<String> roles){
-        return JWT.create()
-                .withSubject(String.valueOf(userId))
-                .withExpiresAt(Instant.now().plus(Duration.of(1, ChronoUnit.DAYS)))
-                .withClaim("account", account)
-                .withClaim("authorities", roles)
-                .sign(Algorithm.HMAC256(properties.getSecretKey()));
+
+        var claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(Instant.now())
+                .expiresAt(Instant.now().plusSeconds(60 * 30))
+                .subject(String.valueOf(userId))
+                .claim("account", account)
+                .claim("authorities", roles)
+                .build();
+        JwtEncoderParameters parameters = JwtEncoderParameters.from(claims);
+        return jwtEncoder.encode(parameters).getTokenValue();
     }
 }

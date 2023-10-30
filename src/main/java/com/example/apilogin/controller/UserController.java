@@ -1,21 +1,14 @@
 package com.example.apilogin.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.apilogin.entities.UserEntity;
-import com.example.apilogin.model.Response;
-import com.example.apilogin.security.JwtDecoder;
 import com.example.apilogin.security.JwtToPrincipalConverter;
-import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserRepository;
-import com.example.apilogin.utils.ImageUtils;
-import com.example.apilogin.utils.JwtUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.Optional;
 
 @RestController

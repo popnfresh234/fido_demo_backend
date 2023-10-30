@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,7 +35,6 @@ public class CustomUserDetailService implements UserDetailsService {
                     .password(user.get().getPassword())
                     .build();
         }else {
-            System.out.println(this.getClass());
             throw new DataAccessException("This user cannot be found"){};
         }
     }

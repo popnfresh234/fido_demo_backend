@@ -1,17 +1,10 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.NewsEntity;
-import com.example.apilogin.model.DeleteRequest;
-import com.example.apilogin.model.Response;
 import com.example.apilogin.service.NewsRepository;
 import com.example.apilogin.service.PagingNewsRepository;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,24 +1,28 @@
 package com.example.apilogin.security;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class JwtToPrincipalConverter {
-    public UserPrincipal convert(DecodedJWT jwt){
+    public UserPrincipal convert(Jwt jwt){
         return UserPrincipal.builder()
                 .userId(Long.valueOf(jwt.getSubject()))
-                .account(jwt.getClaim("account").asString())
+                .account(jwt.getClaim("account"))
                 .authorities(extractAuthoritiesFromClaim(jwt))
                 .build();
     }
 
-    private List<SimpleGrantedAuthority> extractAuthoritiesFromClaim(DecodedJWT jwt){
-        var claim = jwt.getClaim("authorities");
-        if(claim.isNull() || claim.isMissing()) return List.of();
-        return claim.asList(SimpleGrantedAuthority.class);
+    private List<SimpleGrantedAuthority> extractAuthoritiesFromClaim(Jwt jwt){
+        ArrayList<String> authorityStrings =  jwt.getClaim("authorities");
+        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorityStrings.forEach((auth) -> {
+            authorities.add(new SimpleGrantedAuthority(auth));
+        });
+        return authorities;
     }
 }
