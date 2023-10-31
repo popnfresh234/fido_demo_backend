@@ -6,6 +6,7 @@ import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.LogUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -80,7 +81,8 @@ public class UserController {
             @RequestParam String alley,
             @RequestParam String lane,
             @RequestParam String floor,
-            @RequestParam("image") MultipartFile file
+            @RequestParam("image") MultipartFile file,
+            HttpServletRequest httpServletRequest
 
     ) throws IOException {
         log.info("POST /user");
@@ -91,7 +93,7 @@ public class UserController {
             if (file.getSize() > 0) {
                 foundUser.setImage(file.getBytes());
             }
-            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Edit user details", true);
+            UserLogEntity log = LogUtils.buildLog(userLogRepository,httpServletRequest.getRemoteAddr(),"Edit user details", true);
             foundUser.getLogs().add(log);
             return userRepository.save(foundUser);
         } else {

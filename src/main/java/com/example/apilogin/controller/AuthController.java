@@ -15,6 +15,7 @@ import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.LogUtils;
 import com.example.apilogin.utils.MailUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -73,8 +74,8 @@ public class AuthController {
     private MailUtils mailUtils;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-        log.info("POST /login");
+    public LoginResponse login(@RequestBody @Validated LoginRequest request, HttpServletRequest httpServletRequest) {
+        String ip = httpServletRequest.getRemoteAddr();
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getAccount(), request.getPassword()));
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
@@ -82,9 +83,9 @@ public class AuthController {
 
 //        Log user logging in
         Optional<UserEntity> opt = userRepository.findByAccount(request.getAccount());
-        if(opt.isPresent()){
+        if (opt.isPresent()) {
             UserEntity user = opt.get();
-            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Log in", true);
+            UserLogEntity log = LogUtils.buildLog(userLogRepository, ip, "Log in", true);
             user.getLogs().add(log);
             userRepository.save(user);
         }
@@ -137,7 +138,8 @@ public class AuthController {
             @RequestParam String alley,
             @RequestParam String lane,
             @RequestParam String floor,
-            @RequestParam("image") MultipartFile file
+            @RequestParam("image") MultipartFile file,
+            HttpServletRequest httpServletRequest
     ) throws IOException {
 
 
@@ -163,7 +165,7 @@ public class AuthController {
             }
 
 //            Log new user activity
-            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Created user", true);
+            UserLogEntity log = LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(), "Created user", true);
             user.getLogs().add(log);
             userRepository.save(user);
             return new SignupResponse("New user added!");
@@ -177,7 +179,8 @@ public class AuthController {
             @Size(min = 2, message = "Account number must be at least two chars")
             @Size(max = 20, message = "Account number must not be greater than 20 chars")
             @Pattern(regexp = "^[a-zA-Z0-9]*$")
-            String account) {
+            String account,
+            HttpServletRequest httpServletRequest) {
         log.info("POST /recovery");
         Optional<UserEntity> userOptional = userRepository.findByAccount(account);
         if (userOptional.isPresent()) {
@@ -185,13 +188,13 @@ public class AuthController {
             UserEntity user = userOptional.get();
             UUID code = UUID.randomUUID();
             PasswordResetEntity resetEntity = new PasswordResetEntity();
-            LocalDateTime ldt = LocalDateTime.now().plusSeconds(60*5);
+            LocalDateTime ldt = LocalDateTime.now().plusSeconds(60 * 5);
             resetEntity.setExpiry(ldt);
             resetEntity.setToken(code.toString());
             passwordResetRepository.save(resetEntity);
             user.setReset(resetEntity);
 //            Log success
-            LogUtils.buildLog(userLogRepository, "Recovery Request", true);
+            LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(),"Recovery Request", true);
             userRepository.save(user);
 
 //            Send recovery email to user
@@ -206,46 +209,48 @@ public class AuthController {
         }
     }
 
-    @PostMapping(path="/recovery/verify")
-    public Response verifyReset(@RequestBody RecoveryRequest request){
+    @PostMapping(path = "/recovery/verify")
+    public Response verifyReset(@RequestBody RecoveryRequest request, HttpServletRequest httpServletRequest) {
         log.info("POST/ verify token");
         Optional<UserEntity> user = userRepository.findByAccount(request.getAccount());
-        if(user.isPresent()){
+        if (user.isPresent()) {
             UserEntity recoverUser = user.get();
             PasswordResetEntity resetEntity = recoverUser.getReset();
-            if(resetEntity == null){
-                UserLogEntity log = LogUtils.buildLog(userLogRepository,"Recovery Code Verification", false);
+            if (resetEntity == null) {
+                UserLogEntity log = LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(),"Recovery Code Verification", false);
                 recoverUser.getLogs().add(log);
                 userRepository.save(recoverUser);
                 throw new RuntimeException("No recovery code");
             }
             LocalDateTime expiry = resetEntity.getExpiry();
-            if(resetEntity.getToken().equals(request.getCode())&& expiry.isAfter(LocalDateTime.now()) ){
-                UserLogEntity log = LogUtils.buildLog(userLogRepository, "Recovery Code Verification", true);
+            if (resetEntity.getToken().equals(request.getCode()) && expiry.isAfter(LocalDateTime.now())) {
+                UserLogEntity log = LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(),"Recovery Code Verification", true);
                 recoverUser.getLogs().add(log);
                 userRepository.save(recoverUser);
                 return new RecoveryResponse("Valid code", request.getAccount(), request.getCode());
-            } else{
-                UserLogEntity log = LogUtils.buildLog(userLogRepository,"Recovery Code Verification", false);
+            } else {
+                UserLogEntity log = LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(),"Recovery Code Verification", false);
                 recoverUser.getLogs().add(log);
                 userRepository.save(recoverUser);
                 throw new RuntimeException("Code not valid");
             }
-        }else {
+        } else {
             throw new EntityNotFoundException("Cannot find user");
         }
     }
 
     @PostMapping(path = "/recovery/reset")
-    public Response updatePassword(@RequestBody ResetRequest request){
+    public Response updatePassword(@RequestBody ResetRequest request, HttpServletRequest httpServletRequest) {
         Optional<UserEntity> opUser = userRepository.findByAccount(request.getAccount());
-        if(opUser.isPresent()){
-            UserEntity userEntity = opUser.get();;
+        if (opUser.isPresent()) {
+            UserEntity userEntity = opUser.get();
+            ;
             userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
             PasswordResetEntity reset = userEntity.getReset();
             userEntity.setReset(null);
-            UserLogEntity log = LogUtils.buildLog(userLogRepository, "Reset password", true);
+            UserLogEntity log = LogUtils.buildLog(userLogRepository, httpServletRequest.getRemoteAddr(),"Reset password", true);
             userEntity.getLogs().add(log);
+
             userRepository.save(userEntity);
             passwordResetRepository.delete(reset);
             return new Response("Success");

@@ -20,6 +20,8 @@ public class UserLogEntity {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  Long id;
 
+    private String ip;
+
     private String log;
 
     @Column(columnDefinition = "TIMESTAMP")
