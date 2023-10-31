@@ -62,4 +62,8 @@ public class UserEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private PasswordResetEntity reset;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn
+    private Set<UserLogEntity> logs = new HashSet<>();
 }

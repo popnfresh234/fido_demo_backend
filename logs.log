@@ -16087,3 +16087,45 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2023-10-30T22:34:25.602-07:00 ERROR 13249 --- [http-nio-8080-exec-2] c.e.a.c.JsonExceptionHandler             : No recovery code
 2023-10-30T22:34:32.826-07:00  INFO 13249 --- [http-nio-8080-exec-3] c.e.a.c.AuthController                   : POST/ verify token
 2023-10-30T22:34:32.830-07:00 ERROR 13249 --- [http-nio-8080-exec-3] c.e.a.c.JsonExceptionHandler             : Cannot find user
+2023-10-30T22:59:13.272-07:00  INFO 14606 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 14606 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-10-30T22:59:13.275-07:00 DEBUG 14606 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-10-30T22:59:13.276-07:00  INFO 14606 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-10-30T22:59:13.577-07:00  INFO 14606 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-30T22:59:13.607-07:00  INFO 14606 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 6 JPA repository interfaces.
+2023-10-30T22:59:13.873-07:00  INFO 14606 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2023-10-30T22:59:13.879-07:00  INFO 14606 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-10-30T22:59:13.879-07:00  INFO 14606 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-30T22:59:13.919-07:00  INFO 14606 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-10-30T22:59:13.920-07:00  INFO 14606 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 625 ms
+2023-10-30T22:59:13.948-07:00 DEBUG 14606 --- [main] c.e.a.s.f.RoleFilter                     : Filter 'roleFilter' configured for use
+2023-10-30T22:59:13.949-07:00 DEBUG 14606 --- [main] c.e.a.s.f.AccountFilter                  : Filter 'accountFilter' configured for use
+2023-10-30T22:59:14.003-07:00  INFO 14606 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-30T22:59:14.029-07:00  INFO 14606 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-30T22:59:14.030-07:00  INFO 14606 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-10-30T22:59:14.084-07:00  INFO 14606 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-30T22:59:14.145-07:00  INFO 14606 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-30T22:59:14.156-07:00  INFO 14606 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-10-30T22:59:14.293-07:00  INFO 14606 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2fa879ed
+2023-10-30T22:59:14.294-07:00  INFO 14606 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-10-30T22:59:14.439-07:00  INFO 14606 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-30T22:59:14.779-07:00  INFO 14606 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-30T22:59:14.856-07:00  INFO 14606 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-30T22:59:15.425-07:00  WARN 14606 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-30T22:59:15.645-07:00  INFO 14606 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@54519d74, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1ec96512, org.springframework.security.web.context.SecurityContextHolderFilter@2a8081f5, org.springframework.security.web.header.HeaderWriterFilter@5a6f1342, org.springframework.web.filter.CorsFilter@3d00c2ae, org.springframework.security.web.authentication.logout.LogoutFilter@6a25c9ad, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@39d44217, com.example.apilogin.security.filters.AccountFilter@63a9c661, com.example.apilogin.security.filters.RoleFilter@4b425577, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7ecca48, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@73a5cc47, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@665574fb, org.springframework.security.web.session.SessionManagementFilter@5e9a9683, org.springframework.security.web.access.ExceptionTranslationFilter@608b74f3, org.springframework.security.web.access.intercept.AuthorizationFilter@234dfc8e]
+2023-10-30T22:59:15.776-07:00  INFO 14606 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-30T22:59:15.781-07:00  INFO 14606 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 2.71 seconds (process running for 3.043)
+2023-10-30T22:59:21.177-07:00  INFO 14606 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-30T22:59:21.177-07:00  INFO 14606 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-10-30T22:59:21.179-07:00  INFO 14606 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2023-10-30T22:59:21.249-07:00  INFO 14606 --- [http-nio-8080-exec-2] c.e.a.c.AuthController                   : POST /login
+2023-10-30T22:59:21.574-07:00  INFO 14606 --- [http-nio-8080-exec-4] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-30T22:59:50.784-07:00  INFO 14606 --- [http-nio-8080-exec-6] c.e.a.c.AuthController                   : POST /recovery
+2023-10-30T22:59:50.828-07:00  INFO 14606 --- [http-nio-8080-exec-6] c.e.a.c.AuthController                   : Found a user, should send recovery email to: ajhollid@gmail.com
+2023-10-30T23:00:16.548-07:00  INFO 14606 --- [http-nio-8080-exec-8] c.e.a.c.AuthController                   : POST/ verify token
+2023-10-30T23:00:46.293-07:00  INFO 14606 --- [http-nio-8080-exec-1] c.e.a.c.AuthController                   : POST /login
+2023-10-30T23:00:46.399-07:00  INFO 14606 --- [http-nio-8080-exec-2] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-30T23:01:03.942-07:00  INFO 14606 --- [http-nio-8080-exec-3] c.e.a.c.AuthController                   : POST /login
+2023-10-30T23:01:04.075-07:00  INFO 14606 --- [http-nio-8080-exec-4] c.e.a.c.NewsController                   : GET /news/paging
+2023-10-30T23:05:05.614-07:00  INFO 14606 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-30T23:05:05.615-07:00  INFO 14606 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-30T23:05:05.618-07:00  INFO 14606 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.

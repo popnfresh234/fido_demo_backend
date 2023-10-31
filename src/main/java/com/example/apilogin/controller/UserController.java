@@ -1,8 +1,11 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserEntity;
+import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.security.JwtToPrincipalConverter;
+import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.LogUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -29,6 +32,8 @@ public class UserController {
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    UserLogRepository userLogRepository;
 
     @GetMapping(path = "/")
     public @ResponseBody UserEntity getUser(@RequestParam String account) {
@@ -86,6 +91,8 @@ public class UserController {
             if (file.getSize() > 0) {
                 foundUser.setImage(file.getBytes());
             }
+            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Edit user details", true);
+            foundUser.getLogs().add(log);
             return userRepository.save(foundUser);
         } else {
             throw new DataAccessException("Something went wrong updating a user") {

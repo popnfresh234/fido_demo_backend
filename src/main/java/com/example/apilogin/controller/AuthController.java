@@ -3,13 +3,16 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.PasswordResetEntity;
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
+import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.model.*;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.PasswordResetRepository;
 import com.example.apilogin.service.RoleRepository;
+import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.utils.LogUtils;
 import com.example.apilogin.utils.MailUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -64,6 +67,9 @@ public class AuthController {
     @Autowired
     private PasswordResetRepository passwordResetRepository;
     @Autowired
+    private UserLogRepository userLogRepository;
+
+    @Autowired
     private MailUtils mailUtils;
 
     @PostMapping("/login")
@@ -73,6 +79,16 @@ public class AuthController {
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         var token = jwtIssuer.issue(principal.getUserId(), principal.getAccount(), roles);
+
+//        Log user logging in
+        Optional<UserEntity> opt = userRepository.findByAccount(request.getAccount());
+        if(opt.isPresent()){
+            UserEntity user = opt.get();
+            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Log in", true);
+            user.getLogs().add(log);
+            userRepository.save(user);
+        }
+
         return new LoginResponse("Login Success", token, roles);
     }
 
@@ -138,15 +154,18 @@ public class AuthController {
             user.setPassword(passwordEncoder.encode(password));
             UserController.setUserData(user, name, birthdate, city, district, street, alley, lane, floor);
             user.setExtraInfo(("A user"));
-            var userRole = new RoleEntity();
+            RoleEntity userRole = new RoleEntity();
             userRole.setRole("ROLE_USER");
             roleRepository.save(userRole);
             user.getRole().add(userRole);
             if (file.getSize() > 0) {
                 user.setImage(file.getBytes());
             }
-            userRepository.save(user);
 
+//            Log new user activity
+            UserLogEntity log = LogUtils.buildLog(userLogRepository,"Created user", true);
+            user.getLogs().add(log);
+            userRepository.save(user);
             return new SignupResponse("New user added!");
         }
     }
@@ -171,6 +190,8 @@ public class AuthController {
             resetEntity.setToken(code.toString());
             passwordResetRepository.save(resetEntity);
             user.setReset(resetEntity);
+//            Log success
+            LogUtils.buildLog(userLogRepository, "Recovery Request", true);
             userRepository.save(user);
 
 //            Send recovery email to user
@@ -193,12 +214,23 @@ public class AuthController {
             UserEntity recoverUser = user.get();
             PasswordResetEntity resetEntity = recoverUser.getReset();
             if(resetEntity == null){
+                UserLogEntity log = LogUtils.buildLog(userLogRepository,"Recovery Code Verification", false);
+                recoverUser.getLogs().add(log);
+                userRepository.save(recoverUser);
                 throw new RuntimeException("No recovery code");
             }
             LocalDateTime expiry = resetEntity.getExpiry();
             if(resetEntity.getToken().equals(request.getCode())&& expiry.isAfter(LocalDateTime.now()) ){
+                UserLogEntity log = LogUtils.buildLog(userLogRepository, "Recovery Code Verification", true);
+                recoverUser.getLogs().add(log);
+                userRepository.save(recoverUser);
                 return new RecoveryResponse("Valid code", request.getAccount(), request.getCode());
-            } else throw new RuntimeException("Code not valid");
+            } else{
+                UserLogEntity log = LogUtils.buildLog(userLogRepository,"Recovery Code Verification", false);
+                recoverUser.getLogs().add(log);
+                userRepository.save(recoverUser);
+                throw new RuntimeException("Code not valid");
+            }
         }else {
             throw new EntityNotFoundException("Cannot find user");
         }
@@ -212,8 +244,9 @@ public class AuthController {
             userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
             PasswordResetEntity reset = userEntity.getReset();
             userEntity.setReset(null);
+            UserLogEntity log = LogUtils.buildLog(userLogRepository, "Reset password", true);
+            userEntity.getLogs().add(log);
             userRepository.save(userEntity);
-
             passwordResetRepository.delete(reset);
             return new Response("Success");
         } else {
