@@ -1,13 +1,17 @@
 package com.example.apilogin.controller;
 
+import com.example.apilogin.entities.PasswordResetEntity;
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.model.*;
 import com.example.apilogin.security.JwtIssuer;
+import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
+import com.example.apilogin.service.PasswordResetRepository;
 import com.example.apilogin.service.RoleRepository;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.MailUtils;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -17,21 +21,28 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @RestController
@@ -43,12 +54,15 @@ import java.util.Optional;
 public class AuthController {
     private final JwtIssuer jwtIssuer;
     private final AuthenticationManager authenticationManager;
+    private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PasswordResetRepository passwordResetRepository;
     @Autowired
     private MailUtils mailUtils;
 
@@ -148,15 +162,62 @@ public class AuthController {
         log.info("POST /recovery");
         Optional<UserEntity> userOptional = userRepository.findByAccount(account);
         if (userOptional.isPresent()) {
+//            Create password recovery code
             UserEntity user = userOptional.get();
+            UUID code = UUID.randomUUID();
+            PasswordResetEntity resetEntity = new PasswordResetEntity();
+            LocalDateTime ldt = LocalDateTime.now().plusSeconds(60*5);
+            resetEntity.setExpiry(ldt);
+            resetEntity.setToken(code.toString());
+            passwordResetRepository.save(resetEntity);
+            user.setReset(resetEntity);
+            userRepository.save(user);
+
+//            Send recovery email to user
             String subject = "Forgotten Password";
-            String message = "Hello " + user.getName() + ", you seem to have forgotten your password!";
+            String message = "Hello " + user.getName() + ", you seem to have forgotten your password! Use " + code + " to reset your password";
             mailUtils.sendEmail(user.getEmail(), subject, message);
             log.info("Found a user, should send recovery email to: " + user.getEmail());
             return new Response("Found a user, should send recovery email to:" + user.getEmail());
         } else {
             throw new DataAccessException("Cannot find a user with this ID") {
             };
+        }
+    }
+
+    @PostMapping(path="/recovery/verify")
+    public Response verifyReset(@RequestBody RecoveryRequest request){
+        log.info("POST/ verify token");
+        Optional<UserEntity> user = userRepository.findByAccount(request.getAccount());
+        if(user.isPresent()){
+            UserEntity recoverUser = user.get();
+            PasswordResetEntity resetEntity = recoverUser.getReset();
+            if(resetEntity == null){
+                throw new RuntimeException("No recovery code");
+            }
+            LocalDateTime expiry = resetEntity.getExpiry();
+            if(resetEntity.getToken().equals(request.getCode())&& expiry.isAfter(LocalDateTime.now()) ){
+                return new RecoveryResponse("Valid code", request.getAccount(), request.getCode());
+            } else throw new RuntimeException("Code not valid");
+        }else {
+            throw new EntityNotFoundException("Cannot find user");
+        }
+    }
+
+    @PostMapping(path = "/recovery/reset")
+    public Response updatePassword(@RequestBody ResetRequest request){
+        Optional<UserEntity> opUser = userRepository.findByAccount(request.getAccount());
+        if(opUser.isPresent()){
+            UserEntity userEntity = opUser.get();;
+            userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+            PasswordResetEntity reset = userEntity.getReset();
+            userEntity.setReset(null);
+            userRepository.save(userEntity);
+
+            passwordResetRepository.delete(reset);
+            return new Response("Success");
+        } else {
+            throw new EntityNotFoundException("Cannot find user");
         }
     }
 

@@ -181,6 +181,10 @@ INSERT IGNORE INTO db_example.user_entity
 (id, account, alley, birthdate, city, district, email, extra_info, floor, lane, name, password, street)
 VALUES(-1, 'alex123', '12', '1985-04-30', '台北市', '松山區', 'ajhollid@gmail.com', 'My nice admin', '5F', '52', 'Alex', '$2a$10$uJjT/jICqkwlG6gGSfz.uu2OyicX1PLWasRhDZ1x1lU6EvVZIS/2m', '八德路');
 
+
+--        @SequenceGenerator TODO
+--        JPA Generated Value
+--        JPA Identity
 INSERT IGNORE INTO db_example.role_entity
 (id, `role`, role_id)
 VALUES(-1, 'ROLE_ADMIN', -1);

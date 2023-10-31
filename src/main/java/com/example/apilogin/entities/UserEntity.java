@@ -59,4 +59,7 @@ public class UserEntity {
     @Column(length=100000)
     private byte[] image;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn
+    private PasswordResetEntity reset;
 }
