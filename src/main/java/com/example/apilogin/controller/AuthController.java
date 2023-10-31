@@ -75,6 +75,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request, HttpServletRequest httpServletRequest) {
+        log.info("POST /login");
         String ip = httpServletRequest.getRemoteAddr();
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getAccount(), request.getPassword()));
         var principal = (UserPrincipal) authentication.getPrincipal();
@@ -141,8 +142,6 @@ public class AuthController {
             @RequestParam("image") MultipartFile file,
             HttpServletRequest httpServletRequest
     ) throws IOException {
-
-
         log.info("POST /signup");
         Optional<UserEntity> foundUser = userRepository.findByEmail(email);
         if (foundUser.isPresent()) {
@@ -241,6 +240,7 @@ public class AuthController {
 
     @PostMapping(path = "/recovery/reset")
     public Response updatePassword(@RequestBody ResetRequest request, HttpServletRequest httpServletRequest) {
+        log.info("POST /recovery/reset");
         Optional<UserEntity> opUser = userRepository.findByAccount(request.getAccount());
         if (opUser.isPresent()) {
             UserEntity userEntity = opUser.get();
