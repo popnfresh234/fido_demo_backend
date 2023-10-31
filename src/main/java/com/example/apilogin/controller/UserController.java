@@ -30,6 +30,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 
 public class UserController {
+    private static final String OPERATION_EDIT_USER = "edit user";
+
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
     private UserRepository userRepository;
@@ -57,7 +59,7 @@ public class UserController {
             Integer id,
 
             @RequestParam
-            @NotEmpty(message="Account must not be empty")
+            @NotEmpty(message = "Account must not be empty")
             String account,
 
             @Valid
@@ -86,19 +88,25 @@ public class UserController {
 
     ) throws IOException {
         log.info("POST /user");
-        Optional<UserEntity> user = userRepository.findById((id));
-        if (user.isPresent()) {
-            UserEntity foundUser = user.get();
+        try {
+            Optional<UserEntity> user = userRepository.findById((id));
+            UserEntity foundUser = user.orElseThrow();
             setUserData(foundUser, name, birthdate, city, district, street, alley, lane, floor);
             if (file.getSize() > 0) {
                 foundUser.setImage(file.getBytes());
             }
-            UserLogEntity log = LogUtils.buildLog(userLogRepository,httpServletRequest.getRemoteAddr(),"Edit user details", true);
+            UserLogEntity log = LogUtils.buildLog(
+                    userLogRepository,
+                    OPERATION_EDIT_USER,
+                    foundUser.getAccount(),
+                    httpServletRequest.getRemoteAddr(),
+                    "Edit user details", true
+            );
             foundUser.getLogs().add(log);
             return userRepository.save(foundUser);
-        } else {
-            throw new DataAccessException("Something went wrong updating a user") {
-            };
+        }catch(Exception e){
+            // TODO Exceptio Handler
+            throw e;
         }
     }
 

@@ -20,6 +20,10 @@ public class UserLogEntity {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  Long id;
 
+    private String operation;
+
+    private String target;
+
     private String ip;
 
     private String log;
