@@ -91,7 +91,7 @@ public class AuthController {
                     OPERATION_LOGIN,
                     request.getAccount(),
                     httpServletRequest.getRemoteAddr(),
-                    "",
+                    "login",
                     true
             );
             user.getLogs().add(log);
