@@ -2,6 +2,7 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.AuthException;
+import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.model.ErrorResponse;
 import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.utils.LogUtils;
@@ -25,8 +26,9 @@ public class JsonExceptionHandler {
     UserLogRepository userLogRepository;
 
 
-    @ExceptionHandler(AuthException.class)
-    ResponseEntity<Object> handleLoginException(AuthException exception) {
+    @ExceptionHandler(GeneralException.class)
+    ResponseEntity<Object> handleLoginException(GeneralException exception) {
+        log.error("Exception: " + exception.getMessage());
         UserLogEntity userLog = LogUtils.buildLog(
                 userLogRepository,
                 exception.getOperation(),

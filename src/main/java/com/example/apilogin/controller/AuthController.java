@@ -15,7 +15,6 @@ import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.LogUtils;
 import com.example.apilogin.utils.MailUtils;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -26,7 +25,6 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -100,11 +98,12 @@ public class AuthController {
             userRepository.save(user);
             return new LoginResponse("Login Success", token, roles);
         } catch (Exception e) {
-            AuthException authException = new AuthException(e.getMessage());
-            authException.setOperation(OPERATION_LOGIN);
-            authException.setIp(httpServletRequest.getRemoteAddr());
-            authException.setTarget(request.getAccount());
-            throw authException;
+            throw AuthException.builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_LOGIN)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(request.getAccount())
+                    .build();
         }
     }
 
@@ -162,11 +161,14 @@ public class AuthController {
 //        If this user already exists in the database, throw an error
         if (foundUser.isPresent()) {
             log.error("POST /signup User Already Exists");
-            AuthException e = new AuthException("User already exists");
-            e.setOperation(OPERATION_SIGNUP);
-            e.setIp(httpServletRequest.getRemoteAddr());
-            e.setTarget(account);
-            throw e;
+
+            throw AuthException
+                    .builder()
+                    .msg("User already exists")
+                    .operation(OPERATION_SIGNUP)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(account)
+                    .build();
         }
 
 //        Try to save the user
@@ -196,11 +198,14 @@ public class AuthController {
             userRepository.save(user);
             return new SignupResponse("New user added!");
         } catch (Exception e) {
-            AuthException ex = new AuthException(e.getMessage());
-            ex.setOperation(OPERATION_SIGNUP);
-            ex.setTarget(account);
-            ex.setIp(httpServletRequest.getRemoteAddr());
-            throw ex;
+
+            throw AuthException
+                    .builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_SIGNUP)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(account)
+                    .build();
         }
     }
 
@@ -242,11 +247,13 @@ public class AuthController {
             log.info("Found a user, should send recovery email to: " + user.getEmail());
             return new Response("Found a user, should send recovery email to:" + user.getEmail());
         } catch (Exception e) {
-            AuthException ex = new AuthException(e.getMessage());
-            ex.setOperation(OPERATION_RECOVERY_REQUEST);
-            ex.setIp(httpServletRequest.getRemoteAddr());
-            ex.setTarget(account);
-            throw ex;
+            throw AuthException
+                    .builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_RECOVERY_REQUEST)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(account)
+                    .build();
         }
     }
 
@@ -274,11 +281,12 @@ public class AuthController {
                 throw new Exception("Bad token");
             }
         } catch (Exception e) {
-            AuthException ex = new AuthException(e.getMessage());
-            ex.setIp(httpServletRequest.getRemoteAddr());
-            ex.setOperation(OPERATION_RECOVERY_VERIFY);
-            ex.setTarget(request.getAccount());
-            throw ex;
+            throw AuthException.builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_RECOVERY_VERIFY)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(request.getAccount())
+                    .build();
         }
     }
 
@@ -306,11 +314,13 @@ public class AuthController {
             passwordResetRepository.delete(reset);
             return new Response("Success");
         } catch (Exception e) {
-            AuthException ex = new AuthException(e.getMessage());
-            ex.setTarget(request.getAccount());
-            ex.setOperation(OPERATION_RECOVERY_RESET);
-            ex.setIp(httpServletRequest.getRemoteAddr());
-            throw ex;
+            throw AuthException
+                    .builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_RECOVERY_REQUEST)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(request.getAccount())
+                    .build();
         }
     }
 
@@ -321,11 +331,8 @@ public class AuthController {
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .toList();
-
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponse(errorMessages.toString()));
-
     }
 }

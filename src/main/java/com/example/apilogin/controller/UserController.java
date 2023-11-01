@@ -2,6 +2,7 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
+import com.example.apilogin.exceptions.UserEditException;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
@@ -55,10 +56,6 @@ public class UserController {
     public @ResponseBody UserEntity editUser(
 
             @RequestParam
-            @NotEmpty(message = "ID must not be empty")
-            Integer id,
-
-            @RequestParam
             @NotEmpty(message = "Account must not be empty")
             String account,
 
@@ -89,24 +86,28 @@ public class UserController {
     ) throws IOException {
         log.info("POST /user");
         try {
-            Optional<UserEntity> user = userRepository.findById((id));
+            Optional<UserEntity> user = userRepository.findByAccount(account);
             UserEntity foundUser = user.orElseThrow();
             setUserData(foundUser, name, birthdate, city, district, street, alley, lane, floor);
-            if (file.getSize() > 0) {
-                foundUser.setImage(file.getBytes());
-            }
+            foundUser.setImage(file.getBytes());
             UserLogEntity log = LogUtils.buildLog(
                     userLogRepository,
                     OPERATION_EDIT_USER,
                     foundUser.getAccount(),
                     httpServletRequest.getRemoteAddr(),
-                    "Edit user details", true
+                    "Edit user details",
+                    true
             );
             foundUser.getLogs().add(log);
             return userRepository.save(foundUser);
-        }catch(Exception e){
-            // TODO Exceptio Handler
-            throw e;
+        } catch (Exception e) {
+            throw UserEditException
+                    .builder()
+                    .msg(e.getMessage())
+                    .operation(OPERATION_EDIT_USER)
+                    .ip(httpServletRequest.getRemoteAddr())
+                    .target(account)
+                    .build();
         }
     }
 
