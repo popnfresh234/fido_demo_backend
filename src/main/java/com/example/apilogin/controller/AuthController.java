@@ -96,6 +96,8 @@ public class AuthController {
             );
             user.getLogs().add(log);
             userRepository.save(user);
+            httpServletRequest.setAttribute("status", "success");
+
             return new LoginResponse("Login Success", token, roles);
         } catch (Exception e) {
             throw AuthException.builder()
@@ -231,13 +233,14 @@ public class AuthController {
             passwordResetRepository.save(resetEntity);
             user.setReset(resetEntity);
 //            Log success
-            LogUtils.buildLog(
+            UserLogEntity userLog = LogUtils.buildLog(
                     userLogRepository,
                     OPERATION_RECOVERY_REQUEST,
                     user.getAccount(),
                     httpServletRequest.getRemoteAddr(),
                     "Recovery Request",
                     true);
+            user.getLogs().add(userLog);
             userRepository.save(user);
 
 //            Send recovery email to user
@@ -326,7 +329,6 @@ public class AuthController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException e) {
-
         List<String> errorMessages = e.getConstraintViolations()
                 .stream()
                 .map(ConstraintViolation::getMessage)
