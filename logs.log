@@ -17293,3 +17293,6 @@ Consider defining a bean of type 'com.example.apilogin.security.filters.LoggingF
 2023-10-31T19:53:21.176-07:00 ERROR 13916 --- [http-nio-8080-exec-2] c.e.a.c.InterceptHandler                 : Funkiton
 2023-10-31T19:53:21.199-07:00  INFO 13916 --- [http-nio-8080-exec-1] c.e.a.c.NewsController                   : GET /news/paging
 2023-10-31T19:53:21.221-07:00 ERROR 13916 --- [http-nio-8080-exec-1] c.e.a.c.InterceptHandler                 : null
+2023-10-31T20:02:35.449-07:00  INFO 13916 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-31T20:02:35.450-07:00  INFO 13916 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-10-31T20:02:35.454-07:00  INFO 13916 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.

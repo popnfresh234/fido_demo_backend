@@ -163,7 +163,6 @@ public class AuthController {
 //        If this user already exists in the database, throw an error
         if (foundUser.isPresent()) {
             log.error("POST /signup User Already Exists");
-
             throw AuthException
                     .builder()
                     .msg("User already exists")
@@ -184,10 +183,7 @@ public class AuthController {
             userRole.setRole("ROLE_USER");
             roleRepository.save(userRole);
             user.getRole().add(userRole);
-            if (file.getSize() > 0) {
-                user.setImage(file.getBytes());
-            }
-
+            user.setImage(file.getBytes());
 //            Log new user activity
             UserLogEntity log = LogUtils.buildLog(
                     userLogRepository,
