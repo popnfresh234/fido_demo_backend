@@ -1,6 +1,5 @@
 package com.example.apilogin.security;
 
-import com.example.apilogin.security.filters.AccountFilter;
 import com.example.apilogin.security.filters.RoleFilter;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.KeySourceException;
@@ -39,13 +38,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 public class WebSecurityConfig {
-    private final AccountFilter accountFilter;
     private final RoleFilter roleFilter;
     private final CustomUserDetailService customUserDetailService;
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
-        http.addFilterBefore(accountFilter, BasicAuthenticationFilter.class);
         http.addFilterBefore(roleFilter, BasicAuthenticationFilter.class);
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -55,7 +52,7 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**").permitAll()
+                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**", "/logout").permitAll()
                         .anyRequest().authenticated()
 
 

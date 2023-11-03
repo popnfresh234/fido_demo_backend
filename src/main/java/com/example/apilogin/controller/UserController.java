@@ -2,8 +2,10 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
+import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.UserEditException;
 import com.example.apilogin.security.JwtToPrincipalConverter;
+import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.LogUtils;
@@ -16,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,16 +44,17 @@ public class UserController {
     @Autowired
     UserLogRepository userLogRepository;
 
-    @GetMapping(path = "/")
-    public @ResponseBody UserEntity getUser(@RequestParam String account) {
-        log.info("GET /user/:account");
-        Optional<UserEntity> user = userRepository.findByAccount(account);
+    @GetMapping()
+    public @ResponseBody UserEntity getUser() {
+        log.info("GET /user/");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt token = (Jwt) authentication.getPrincipal();
+        UserPrincipal principal = jwtToPrincipalConverter.convert(token);
+        Optional<UserEntity> user = userRepository.findByAccount(principal.getAccount());
         if (user.isPresent()) {
-
             return user.get();
         } else {
-            throw new DataAccessException("This user cannot be found") {
-            };
+            throw GeneralException.builder().msg("User not found").build();
         }
     }
 
