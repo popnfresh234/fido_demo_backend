@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Builder
 @Data
-public class SignupRequest {
+public class UserRequest {
 
     @NotEmpty(message = "Account number must not be empty")
     @Size(min = 2, message = "Account number must be at least two chars")

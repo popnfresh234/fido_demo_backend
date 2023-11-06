@@ -34,9 +34,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -110,7 +108,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public Response signup(@ModelAttribute @Valid SignupRequest signupRequest, HttpServletRequest httpServletRequest) {
+    public Response signup(@ModelAttribute @Valid UserRequest signupRequest, HttpServletRequest httpServletRequest) {
         log.info("POST /signup");
         Optional<UserEntity> foundUser = userRepository.findByEmail(signupRequest.getEmail());
 

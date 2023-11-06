@@ -4,26 +4,20 @@ import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.UserEditException;
-import com.example.apilogin.model.EditRequest;
+import com.example.apilogin.model.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserLogRepository;
 import com.example.apilogin.service.UserRepository;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -62,7 +56,7 @@ public class UserController {
     @PostMapping(path = "/")
     public @ResponseBody UserEntity editUser(
 
-            @ModelAttribute EditRequest editRequest,
+            @ModelAttribute UserRequest editRequest,
             HttpServletRequest httpServletRequest
 
     ) throws IOException {
