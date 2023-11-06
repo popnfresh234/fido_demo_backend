@@ -1,6 +1,5 @@
-package com.example.apilogin.service;
+package com.example.apilogin.repositories;
 
-import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import org.springframework.data.repository.CrudRepository;
 

@@ -23225,3 +23225,83 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2023-11-06T11:17:58.746+08:00  INFO 27741 --- [https-jsse-nio-8080-exec-7] c.e.a.c.NewsController                   : GET /news/paging
 2023-11-06T11:17:59.859+08:00  INFO 27741 --- [https-jsse-nio-8080-exec-8] c.e.a.c.UserController                   : GET /user/
 2023-11-06T11:18:00.447+08:00  INFO 27741 --- [https-jsse-nio-8080-exec-9] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:33:33.323+08:00  INFO 28738 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 28738 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-11-06T11:33:33.327+08:00 DEBUG 28738 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-11-06T11:33:33.327+08:00  INFO 28738 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-11-06T11:33:33.635+08:00  INFO 28738 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-06T11:33:33.665+08:00  INFO 28738 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 6 JPA repository interfaces.
+2023-11-06T11:33:33.970+08:00  INFO 28738 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (https)
+2023-11-06T11:33:33.977+08:00  INFO 28738 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-11-06T11:33:33.978+08:00  INFO 28738 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-11-06T11:33:34.010+08:00  INFO 28738 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-11-06T11:33:34.010+08:00  INFO 28738 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 661 ms
+2023-11-06T11:33:34.041+08:00 DEBUG 28738 --- [main] c.e.a.s.f.RoleFilter                     : Filter 'roleFilter' configured for use
+2023-11-06T11:33:34.095+08:00  INFO 28738 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-06T11:33:34.117+08:00  INFO 28738 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-06T11:33:34.118+08:00  INFO 28738 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-11-06T11:33:34.171+08:00  INFO 28738 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-06T11:33:34.237+08:00  INFO 28738 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-06T11:33:34.246+08:00  INFO 28738 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-11-06T11:33:34.384+08:00  INFO 28738 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5b0e9e0c
+2023-11-06T11:33:34.385+08:00  INFO 28738 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-11-06T11:33:34.534+08:00  INFO 28738 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-06T11:33:34.887+08:00  INFO 28738 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-06T11:33:34.927+08:00  INFO 28738 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-06T11:33:35.618+08:00  WARN 28738 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-06T11:33:35.818+08:00  INFO 28738 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@31f96cf, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3dc5eb8f, org.springframework.security.web.context.SecurityContextHolderFilter@515a2afd, org.springframework.security.web.header.HeaderWriterFilter@78fd1179, org.springframework.web.filter.CorsFilter@1d4b0a07, org.springframework.security.web.authentication.logout.LogoutFilter@395854dd, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@5f92e5eb, com.example.apilogin.security.filters.RoleFilter@4b325930, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6e200307, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5c7c22ce, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@17a89cb1, org.springframework.security.web.session.SessionManagementFilter@5e08ed28, org.springframework.security.web.access.ExceptionTranslationFilter@130bd00e, org.springframework.security.web.access.intercept.AuthorizationFilter@1cbb394b]
+2023-11-06T11:33:35.976+08:00  INFO 28738 --- [main] o.a.t.u.n.N.certificate                  : Connector [https-jsse-nio-8080], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [/home/alex/.keystore] using alias [webcomm.demo.backend] with trust store [null]
+2023-11-06T11:33:35.981+08:00  INFO 28738 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (https) with context path ''
+2023-11-06T11:33:35.986+08:00  INFO 28738 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 2.879 seconds (process running for 3.242)
+2023-11-06T11:33:43.975+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-5] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-06T11:33:43.975+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-11-06T11:33:43.976+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2023-11-06T11:33:44.044+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-6] c.e.a.c.AuthController                   : POST /login
+2023-11-06T11:33:44.359+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-8] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:33:46.142+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-10] c.e.a.c.UserController                   : GET /user/
+2023-11-06T11:33:46.739+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-1] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:33:48.137+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-2] c.e.a.c.UserController                   : GET /user/
+2023-11-06T11:33:53.253+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-3] c.e.a.c.UserController                   : POST /user
+2023-11-06T11:33:56.701+08:00  INFO 28738 --- [https-jsse-nio-8080-exec-4] c.e.a.c.UserController                   : POST /user
+2023-11-06T11:45:01.627+08:00  INFO 28738 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-06T11:45:01.628+08:00  INFO 28738 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2023-11-06T11:45:01.631+08:00  INFO 28738 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2023-11-06T11:45:03.184+08:00  INFO 29261 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 29261 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-11-06T11:45:03.187+08:00 DEBUG 29261 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-11-06T11:45:03.188+08:00  INFO 29261 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-11-06T11:45:03.489+08:00  INFO 29261 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-06T11:45:03.520+08:00  INFO 29261 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 6 JPA repository interfaces.
+2023-11-06T11:45:03.810+08:00  INFO 29261 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (https)
+2023-11-06T11:45:03.820+08:00  INFO 29261 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-11-06T11:45:03.820+08:00  INFO 29261 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-11-06T11:45:03.855+08:00  INFO 29261 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-11-06T11:45:03.855+08:00  INFO 29261 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 648 ms
+2023-11-06T11:45:03.889+08:00 DEBUG 29261 --- [main] c.e.a.s.f.RoleFilter                     : Filter 'roleFilter' configured for use
+2023-11-06T11:45:03.940+08:00  INFO 29261 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-06T11:45:03.960+08:00  INFO 29261 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-06T11:45:03.961+08:00  INFO 29261 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-11-06T11:45:04.014+08:00  INFO 29261 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-06T11:45:04.077+08:00  INFO 29261 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-06T11:45:04.086+08:00  INFO 29261 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-11-06T11:45:04.215+08:00  INFO 29261 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4a453f8d
+2023-11-06T11:45:04.216+08:00  INFO 29261 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-11-06T11:45:04.359+08:00  INFO 29261 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-06T11:45:04.713+08:00  INFO 29261 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-06T11:45:04.752+08:00  INFO 29261 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-06T11:45:05.226+08:00  WARN 29261 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-06T11:45:05.426+08:00  INFO 29261 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@9423344, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@73ccdfc1, org.springframework.security.web.context.SecurityContextHolderFilter@4eb69e8d, org.springframework.security.web.header.HeaderWriterFilter@7e2c8622, org.springframework.web.filter.CorsFilter@18d8da77, org.springframework.security.web.authentication.logout.LogoutFilter@31a9eaa, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@78c9c38a, com.example.apilogin.security.filters.RoleFilter@6c33da7a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@13cec4ff, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@515a2afd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@502dc93a, org.springframework.security.web.session.SessionManagementFilter@b67b359, org.springframework.security.web.access.ExceptionTranslationFilter@3b863b4, org.springframework.security.web.access.intercept.AuthorizationFilter@7d7d7b1a]
+2023-11-06T11:45:05.585+08:00  INFO 29261 --- [main] o.a.t.u.n.N.certificate                  : Connector [https-jsse-nio-8080], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [/home/alex/.keystore] using alias [webcomm.demo.backend] with trust store [null]
+2023-11-06T11:45:05.591+08:00  INFO 29261 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (https) with context path ''
+2023-11-06T11:45:05.596+08:00  INFO 29261 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 2.611 seconds (process running for 2.954)
+2023-11-06T11:45:17.795+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-5] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-06T11:45:17.796+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-11-06T11:45:17.796+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Completed initialization in 0 ms
+2023-11-06T11:45:25.793+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-7] c.e.a.c.AuthController                   : POST /login
+2023-11-06T11:45:26.068+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-8] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:45:27.982+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-9] c.e.a.c.UserController                   : GET /user/
+2023-11-06T11:45:28.551+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-10] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:45:32.084+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-2] c.e.a.s.f.RoleFilter                     : Role Filter
+2023-11-06T11:45:32.097+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-2] c.e.a.c.NewsController                   : POST /news/delete
+2023-11-06T11:45:33.314+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-3] c.e.a.c.UserController                   : GET /user/
+2023-11-06T11:45:34.167+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-4] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-06T11:45:37.420+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-5] c.e.a.c.AuthController                   : POST /login
+2023-11-06T11:45:37.531+08:00  INFO 29261 --- [https-jsse-nio-8080-exec-6] c.e.a.c.NewsController                   : GET /news/paging

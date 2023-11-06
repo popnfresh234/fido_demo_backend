@@ -9,10 +9,14 @@ import com.example.apilogin.model.*;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.service.PasswordResetRepository;
-import com.example.apilogin.service.RoleRepository;
-import com.example.apilogin.service.UserLogRepository;
-import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.repositories.PasswordResetRepository;
+import com.example.apilogin.repositories.RoleRepository;
+import com.example.apilogin.repositories.UserLogRepository;
+import com.example.apilogin.repositories.UserRepository;
+import com.example.apilogin.services.PasswordResetService;
+import com.example.apilogin.services.RoleService;
+import com.example.apilogin.services.UserLogService;
+import com.example.apilogin.services.UserService;
 import com.example.apilogin.utils.LogUtils;
 import com.example.apilogin.utils.MailUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,13 +58,13 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
     @Autowired
-    private PasswordResetRepository passwordResetRepository;
+    private PasswordResetService passwordResetService;
     @Autowired
-    private UserLogRepository userLogRepository;
+    private UserLogService userLogService;
 
     @Autowired
     private MailUtils mailUtils;
@@ -82,10 +86,10 @@ public class AuthController {
             var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
             var token = jwtIssuer.issue(principal.getUserId(), principal.getAccount(), roles);
 //        Log user logging in
-            Optional<UserEntity> opt = userRepository.findByAccount(request.getAccount());
+            Optional<UserEntity> opt = userService.findByAccount(request.getAccount());
             UserEntity user = opt.orElseThrow();
             UserLogEntity log = LogUtils.buildLog(
-                    userLogRepository,
+                    userLogService,
                     OPERATION_LOGIN,
                     request.getAccount(),
                     httpServletRequest.getRemoteAddr(),
@@ -93,7 +97,7 @@ public class AuthController {
                     true
             );
             user.getLogs().add(log);
-            userRepository.save(user);
+            userService.save(user);
             httpServletRequest.setAttribute("status", "success");
 
             return new LoginResponse("Login Success", token, roles);
@@ -110,7 +114,7 @@ public class AuthController {
     @PostMapping("/signup")
     public Response signup(@ModelAttribute @Valid UserRequest signupRequest, HttpServletRequest httpServletRequest) {
         log.info("POST /signup");
-        Optional<UserEntity> foundUser = userRepository.findByEmail(signupRequest.getEmail());
+        Optional<UserEntity> foundUser = userService.findByEmail(signupRequest.getEmail());
 
 //        If this user already exists in the database, throw an error
         if (foundUser.isPresent()) {
@@ -133,19 +137,19 @@ public class AuthController {
             UserController.setUserData(user, signupRequest.getName(), signupRequest.getBirthdate(), signupRequest.getCity(), signupRequest.getDistrict(), signupRequest.getStreet(), signupRequest.getAlley(), signupRequest.getAlley(), signupRequest.getFloor());
             RoleEntity userRole = new RoleEntity();
             userRole.setRole("ROLE_USER");
-            roleRepository.save(userRole);
+            roleService.save(userRole);
             user.getRole().add(userRole);
             user.setImage(signupRequest.getImage().getBytes());
 //            Log new user activity
             UserLogEntity log = LogUtils.buildLog(
-                    userLogRepository,
+                    userLogService,
                     OPERATION_SIGNUP,
                     user.getAccount(),
                     httpServletRequest.getRemoteAddr(),
                     "Created user",
                     true);
             user.getLogs().add(log);
-            userRepository.save(user);
+            userService.save(user);
             return new SignupResponse("New user added!");
         } catch (Exception e) {
 
@@ -169,7 +173,7 @@ public class AuthController {
             String account,
             HttpServletRequest httpServletRequest) {
         log.info("POST /recovery");
-        Optional<UserEntity> userOptional = userRepository.findByAccount(account);
+        Optional<UserEntity> userOptional = userService.findByAccount(account);
 //            Create password recovery code
         try {
             UserEntity user = userOptional.orElseThrow();
@@ -178,18 +182,18 @@ public class AuthController {
             LocalDateTime ldt = LocalDateTime.now().plusSeconds(60 * 5);
             resetEntity.setExpiry(ldt);
             resetEntity.setToken(code.toString());
-            passwordResetRepository.save(resetEntity);
+            passwordResetService.save(resetEntity);
             user.setReset(resetEntity);
 //            Log success
             UserLogEntity userLog = LogUtils.buildLog(
-                    userLogRepository,
+                    userLogService,
                     OPERATION_RECOVERY_REQUEST,
                     user.getAccount(),
                     httpServletRequest.getRemoteAddr(),
                     "Recovery Request",
                     true);
             user.getLogs().add(userLog);
-            userRepository.save(user);
+            userService.save(user);
 
 //            Send recovery email to user
             String subject = "Forgotten Password";
@@ -211,7 +215,7 @@ public class AuthController {
     @PostMapping(path = "/recovery/verify")
     public Response verifyReset(@RequestBody RecoveryRequest request, HttpServletRequest httpServletRequest) {
         log.info("POST/ verify token");
-        Optional<UserEntity> user = userRepository.findByAccount(request.getAccount());
+        Optional<UserEntity> user = userService.findByAccount(request.getAccount());
         try {
             UserEntity recoverUser = user.orElseThrow();
             PasswordResetEntity resetEntity = recoverUser.getReset();
@@ -219,14 +223,14 @@ public class AuthController {
                     resetEntity.getToken().equals(request.getCode())
                     && resetEntity.getExpiry().isAfter(LocalDateTime.now())) {
                 UserLogEntity log = LogUtils.buildLog(
-                        userLogRepository,
+                        userLogService,
                         OPERATION_RECOVERY_VERIFY,
                         request.getAccount(),
                         httpServletRequest.getRemoteAddr(),
                         "Recovery Code Verification",
                         true);
                 recoverUser.getLogs().add(log);
-                userRepository.save(recoverUser);
+                userService.save(recoverUser);
                 return new RecoveryResponse("Valid code", request.getAccount(), request.getCode());
             } else {
                 throw new Exception("Bad token");
@@ -245,14 +249,14 @@ public class AuthController {
     public Response updatePassword(@RequestBody ResetRequest request, HttpServletRequest httpServletRequest) {
         log.info("POST /recovery/reset");
         try {
-            Optional<UserEntity> opUser = userRepository.findByAccount(request.getAccount());
+            Optional<UserEntity> opUser = userService.findByAccount(request.getAccount());
             UserEntity userEntity = opUser.orElseThrow();
             userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
             PasswordResetEntity reset = userEntity.getReset();
             userEntity.setReset(null);
 
             UserLogEntity log = LogUtils.buildLog(
-                    userLogRepository,
+                    userLogService,
                     OPERATION_RECOVERY_RESET,
                     userEntity.getAccount(),
                     httpServletRequest.getRemoteAddr(),
@@ -261,8 +265,8 @@ public class AuthController {
             );
 
             userEntity.getLogs().add(log);
-            userRepository.save(userEntity);
-            passwordResetRepository.delete(reset);
+            userService.save(userEntity);
+            passwordResetService.delete(reset);
             return new Response("Success");
         } catch (Exception e) {
             throw AuthException

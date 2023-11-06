@@ -1,10 +1,10 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserLogEntity;
-import com.example.apilogin.exceptions.AuthException;
 import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.model.ErrorResponse;
-import com.example.apilogin.service.UserLogRepository;
+import com.example.apilogin.repositories.UserLogRepository;
+import com.example.apilogin.services.UserLogService;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,19 +29,18 @@ import java.util.stream.Collectors;
 public class JsonExceptionHandler {
 
     @Autowired
-    UserLogRepository userLogRepository;
-
+    UserLogService userLogService;
     @ExceptionHandler(GeneralException.class)
     ResponseEntity<Object> handleLoginException(GeneralException exception) {
         log.error("Exception: " + exception.getMessage());
         UserLogEntity userLog = LogUtils.buildLog(
-                userLogRepository,
+                userLogService,
                 exception.getOperation(),
                 exception.getTarget(),
                 exception.getIp(),
                 exception.getMessage(),
                 false);
-        userLogRepository.save(userLog);
+        userLogService.save(userLog);
         return buildResponseEntity(exception.getMessage());
     }
 
@@ -64,8 +62,8 @@ public class JsonExceptionHandler {
     public ResponseEntity<Object> handleAllOtherErrors(HttpServletRequest req, Exception exception) {
         log.error("Class: " + exception.getClass());
         String target = (String) req.getAttribute("account");
-        UserLogEntity userLog = LogUtils.buildLog(userLogRepository, "general", target, req.getRemoteAddr(), exception.getMessage(), false);
-        userLogRepository.save(userLog);
+        UserLogEntity userLog = LogUtils.buildLog(userLogService, "general", target, req.getRemoteAddr(), exception.getMessage(), false);
+        userLogService.save(userLog);
         log.error(exception.getMessage());
 
         return buildResponseEntity(exception.getMessage());

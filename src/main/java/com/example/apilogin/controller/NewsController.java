@@ -4,10 +4,10 @@ import com.example.apilogin.entities.NewsEntity;
 import com.example.apilogin.exceptions.NewsException;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.service.NewsRepository;
-import com.example.apilogin.service.PagingNewsRepository;
+import com.example.apilogin.repositories.NewsRepository;
+import com.example.apilogin.repositories.PagingNewsRepository;
+import com.example.apilogin.services.PagingNewsService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,19 +31,8 @@ public class NewsController {
     private static final String OPERATION_NEWS_DELETE = "delete news";
     private static final String OPERATION_REQUEST_NEWS = "request news";
 
-
     @Autowired
-    private NewsRepository newsRepository;
-
-    @Autowired
-    private PagingNewsRepository pagingNewsRepository;
-
-    @GetMapping(path = "/")
-    public @ResponseBody Optional<NewsEntity> getNewsItem(@RequestParam Integer id) {
-        log.info("GET /news/:id");
-        // This returns a JSON or XML with the users
-        return newsRepository.findById(id);
-    }
+    private PagingNewsService pagingNewsService;
 
     @GetMapping(path = "/paging")
     public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(@RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize, HttpServletRequest httpServletRequest) {
@@ -72,7 +61,7 @@ public class NewsController {
             HttpServletRequest httpServletRequest) {
         log.info("POST /news/delete");
         try {
-            pagingNewsRepository.deleteAllById(Arrays.asList(deleteArray));
+            pagingNewsService.deleteAllById(Arrays.asList(deleteArray));
             return buildResponse(pageNumber, pageSize);
         } catch (Exception e) {
             throw NewsException
@@ -89,7 +78,7 @@ public class NewsController {
         List<NewsEntity> newsItems;
         Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by("localDate").descending());
         Page<NewsEntity> pageNews;
-        pageNews = pagingNewsRepository.findAll(paging);
+        pageNews = pagingNewsService.findAll(paging);
         newsItems = pageNews.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("newsItems", newsItems);

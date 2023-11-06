@@ -7,8 +7,10 @@ import com.example.apilogin.exceptions.UserEditException;
 import com.example.apilogin.model.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.service.UserLogRepository;
-import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.repositories.UserLogRepository;
+import com.example.apilogin.repositories.UserRepository;
+import com.example.apilogin.services.UserLogService;
+import com.example.apilogin.services.UserService;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +37,9 @@ public class UserController {
 
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
-    UserLogRepository userLogRepository;
+    UserLogService userLogService;
 
     @GetMapping()
     public @ResponseBody UserEntity getUser() {
@@ -45,7 +47,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt token = (Jwt) authentication.getPrincipal();
         UserPrincipal principal = jwtToPrincipalConverter.convert(token);
-        Optional<UserEntity> user = userRepository.findByAccount(principal.getAccount());
+        Optional<UserEntity> user = userService.findByAccount(principal.getAccount());
         if (user.isPresent()) {
             return user.get();
         } else {
@@ -65,13 +67,13 @@ public class UserController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt token = (Jwt) authentication.getPrincipal();
             UserPrincipal principal = jwtToPrincipalConverter.convert(token);
-            Optional<UserEntity> user = userRepository.findByAccount(principal.getAccount());
+            Optional<UserEntity> user = userService.findByAccount(principal.getAccount());
             UserEntity foundUser = user.orElseThrow();
             setUserData(foundUser, editRequest.getName(), editRequest.getBirthdate(), editRequest.getCity(), editRequest.getDistrict(),
                     editRequest.getStreet(), editRequest.getAlley(), editRequest.getLane(), editRequest.getFloor());
             foundUser.setImage(editRequest.getImage().getBytes());
             UserLogEntity log = LogUtils.buildLog(
-                    userLogRepository,
+                    userLogService,
                     OPERATION_EDIT_USER,
                     foundUser.getAccount(),
                     httpServletRequest.getRemoteAddr(),
@@ -79,7 +81,7 @@ public class UserController {
                     true
             );
             foundUser.getLogs().add(log);
-            return userRepository.save(foundUser);
+            return userService.save(foundUser);
         } catch (Exception e) {
             throw UserEditException
                     .builder()

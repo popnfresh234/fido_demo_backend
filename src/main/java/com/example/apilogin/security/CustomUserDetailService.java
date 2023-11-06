@@ -2,7 +2,7 @@ package com.example.apilogin.security;
 
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
-import com.example.apilogin.service.UserRepository;
+import com.example.apilogin.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
