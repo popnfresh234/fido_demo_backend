@@ -110,55 +110,10 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public Response signup(
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Account number must not be empty")
-            @Size(min = 2, message = "Account number must be at least two chars")
-            @Size(max = 20, message = "Account number must not be greater than 20 chars")
-            @Pattern(regexp = "^[a-zA-Z0-9]*$")
-            String account,
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Name must not be empty")
-            @Size(min = 1, message = "Name must be at least 1 char")
-            @Size(max = 20, message = "Name must not be greater than 20 chars")
-            String name,
-
-            @NotEmpty(message = "Email must not be empty")
-            @Size(max = 50, message = "Email must be less than 50 chars")
-            @Valid @RequestParam String email,
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Password must not be empty")
-            @Size(min = 8, message = "Password must be at least 8 chars")
-            @Size(max = 20, message = "Password must not be greater than 20 chars")
-            @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$", message = "Password must meet reqs")
-            String password,
-
-            @NotEmpty(message = "Email must not be empty")
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Date must not be empty")
-            @Pattern(regexp = "^[12][0-9][0-9][0-9]/[01][0-9]/[0-3][0-9]$", message = "Date must match format yyyy/MM/dd")
-            String birthdate,
-
-
-            @RequestParam String city,
-            @RequestParam String district,
-            @RequestParam String street,
-            @RequestParam String alley,
-            @RequestParam String lane,
-            @RequestParam String floor,
-            @RequestParam("image") MultipartFile file,
-            HttpServletRequest httpServletRequest
-    ) throws IOException {
+    public Response signup(@ModelAttribute SignupRequest signupRequest, HttpServletRequest httpServletRequest) {
         log.info("POST /signup");
-        Optional<UserEntity> foundUser = userRepository.findByEmail(email);
+        log.error(signupRequest.getEmail());
+        Optional<UserEntity> foundUser = userRepository.findByEmail(signupRequest.getEmail());
 
 //        If this user already exists in the database, throw an error
         if (foundUser.isPresent()) {
@@ -168,22 +123,22 @@ public class AuthController {
                     .msg("User already exists")
                     .operation(OPERATION_SIGNUP)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(account)
+                    .target(signupRequest.getAccount())
                     .build();
         }
 
 //        Try to save the user
         try {
             var user = new UserEntity();
-            user.setAccount(account);
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(password));
-            UserController.setUserData(user, name, birthdate, city, district, street, alley, lane, floor);
+            user.setAccount(signupRequest.getAccount());
+            user.setEmail(signupRequest.getEmail());
+            user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+            UserController.setUserData(user, signupRequest.getName(), signupRequest.getBirthdate(), signupRequest.getCity(), signupRequest.getDistrict(), signupRequest.getStreet(), signupRequest.getAlley(), signupRequest.getAlley(), signupRequest.getFloor());
             RoleEntity userRole = new RoleEntity();
             userRole.setRole("ROLE_USER");
             roleRepository.save(userRole);
             user.getRole().add(userRole);
-            user.setImage(file.getBytes());
+            user.setImage(signupRequest.getImage().getBytes());
 //            Log new user activity
             UserLogEntity log = LogUtils.buildLog(
                     userLogRepository,
@@ -202,7 +157,7 @@ public class AuthController {
                     .msg(e.getMessage())
                     .operation(OPERATION_SIGNUP)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(account)
+                    .target(signupRequest.getAccount())
                     .build();
         }
     }

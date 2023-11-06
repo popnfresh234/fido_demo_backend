@@ -4,6 +4,7 @@ import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.UserEditException;
+import com.example.apilogin.model.EditRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.service.UserLogRepository;
@@ -61,41 +62,20 @@ public class UserController {
     @PostMapping(path = "/")
     public @ResponseBody UserEntity editUser(
 
-            @RequestParam
-            @NotEmpty(message = "Account must not be empty")
-            String account,
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Name must not be empty")
-            @Size(min = 1, message = "Name must be at least 1 char")
-            @Size(max = 20, message = "Name must not be greater than 20 chars")
-            String name,
-
-
-            @Valid
-            @RequestParam
-            @NotEmpty(message = "Date must not be empty")
-            @Pattern(regexp = "^[12][0-9][0-9][0-9]/[01][0-9]/[0-3][0-9]$", message = "Date must match format yyyy/MM/dd")
-            String birthdate,
-
-
-            @RequestParam String city,
-            @RequestParam String district,
-            @RequestParam String street,
-            @RequestParam String alley,
-            @RequestParam String lane,
-            @RequestParam String floor,
-            @RequestParam("image") MultipartFile file,
+            @ModelAttribute EditRequest editRequest,
             HttpServletRequest httpServletRequest
 
     ) throws IOException {
         log.info("POST /user");
         try {
-            Optional<UserEntity> user = userRepository.findByAccount(account);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Jwt token = (Jwt) authentication.getPrincipal();
+            UserPrincipal principal = jwtToPrincipalConverter.convert(token);
+            Optional<UserEntity> user = userRepository.findByAccount(principal.getAccount());
             UserEntity foundUser = user.orElseThrow();
-            setUserData(foundUser, name, birthdate, city, district, street, alley, lane, floor);
-            foundUser.setImage(file.getBytes());
+            setUserData(foundUser, editRequest.getName(), editRequest.getBirthdate(), editRequest.getCity(), editRequest.getDistrict(),
+                    editRequest.getStreet(), editRequest.getAlley(), editRequest.getLane(), editRequest.getFloor());
+            foundUser.setImage(editRequest.getImage().getBytes());
             UserLogEntity log = LogUtils.buildLog(
                     userLogRepository,
                     OPERATION_EDIT_USER,
@@ -112,7 +92,7 @@ public class UserController {
                     .msg(e.getMessage())
                     .operation(OPERATION_EDIT_USER)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(account)
+                    .target(editRequest.getAccount())
                     .build();
         }
     }

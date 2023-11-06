@@ -26,6 +26,7 @@ public class UserLogEntity {
 
     private String ip;
 
+    @Column(length=100000)
     private String log;
 
     @Column(columnDefinition = "TIMESTAMP")
