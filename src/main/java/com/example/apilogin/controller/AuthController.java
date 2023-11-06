@@ -110,9 +110,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public Response signup(@ModelAttribute SignupRequest signupRequest, HttpServletRequest httpServletRequest) {
+    public Response signup(@ModelAttribute @Valid SignupRequest signupRequest, HttpServletRequest httpServletRequest) {
         log.info("POST /signup");
-        log.error(signupRequest.getEmail());
         Optional<UserEntity> foundUser = userRepository.findByEmail(signupRequest.getEmail());
 
 //        If this user already exists in the database, throw an error

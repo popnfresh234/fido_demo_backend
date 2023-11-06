@@ -2,11 +2,11 @@ package com.example.apilogin.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -31,6 +31,7 @@ public class UserEntity {
     private  String email;
 
     @NotBlank(message= "Name is mandatory")
+
     private String name;
 
     @JsonIgnore
@@ -51,6 +52,7 @@ public class UserEntity {
 //    End address
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn
     private Set<RoleEntity> role = new HashSet<>();
 
@@ -61,10 +63,12 @@ public class UserEntity {
     private byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn
     private PasswordResetEntity reset;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn
     private Set<UserLogEntity> logs = new HashSet<>();
 }
