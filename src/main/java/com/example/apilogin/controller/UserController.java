@@ -7,21 +7,16 @@ import com.example.apilogin.exceptions.UserEditException;
 import com.example.apilogin.model.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.repositories.UserLogRepository;
-import com.example.apilogin.repositories.UserRepository;
 import com.example.apilogin.services.UserLogService;
 import com.example.apilogin.services.UserService;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -30,16 +25,23 @@ import java.util.Optional;
 @CrossOrigin
 @Log4j2
 @RequestMapping(path = "/user")
-@RequiredArgsConstructor
 
 public class UserController {
     private static final String OPERATION_EDIT_USER = "edit user";
 
     private final JwtToPrincipalConverter jwtToPrincipalConverter;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    UserLogService userLogService;
+    private final UserService userService;
+    private final UserLogService userLogService;
+
+    public UserController(
+            UserService userService,
+            UserLogService userLogService,
+            JwtToPrincipalConverter jwtToPrincipalConverter
+    ){
+        this.userService = userService;
+        this.userLogService = userLogService;
+        this.jwtToPrincipalConverter = jwtToPrincipalConverter;
+    }
 
     @GetMapping()
     public @ResponseBody UserEntity getUser() {
@@ -61,7 +63,7 @@ public class UserController {
             @ModelAttribute UserRequest editRequest,
             HttpServletRequest httpServletRequest
 
-    ) throws IOException {
+    ) {
         log.info("POST /user");
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

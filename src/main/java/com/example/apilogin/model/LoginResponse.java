@@ -10,9 +10,6 @@ import java.util.List;
 public class LoginResponse extends Response{
     String accessToken;
     List<String> role;
-    public LoginResponse(String message) {
-        super(message);
-    }
     public LoginResponse(String message, String accessToken, List<String> role) {
         super(message);
         this.accessToken = accessToken;

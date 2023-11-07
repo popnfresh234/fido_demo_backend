@@ -9,22 +9,23 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public Optional<UserEntity> findByAccount(String account){
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+
+    public Optional<UserEntity> findByAccount(String account) {
         return userRepository.findByAccount(account);
     }
 
-    public Optional<UserEntity> findByEmail(String email){
+    public Optional<UserEntity> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public Optional<UserEntity> findById(Integer id){
-        return userRepository.findById(id);
-    }
-
-    public UserEntity save(UserEntity user){
+    public UserEntity save(UserEntity user) {
         return userRepository.save(user);
     }
 }

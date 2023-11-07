@@ -7,14 +7,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PasswordResetService {
-    @Autowired
-    private PasswordResetRepository passwordResetRepository;
+    private final PasswordResetRepository passwordResetRepository;
 
-    public void save(PasswordResetEntity passwordResetEntity){
+    public PasswordResetService(PasswordResetRepository passwordResetRepository) {
+        this.passwordResetRepository = passwordResetRepository;
+    }
+
+    public void save(PasswordResetEntity passwordResetEntity) {
         passwordResetRepository.save(passwordResetEntity);
     }
 
-    public void delete(PasswordResetEntity passwordResetEntity){
+    public void delete(PasswordResetEntity passwordResetEntity) {
         passwordResetRepository.delete(passwordResetEntity);
     }
 }

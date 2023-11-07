@@ -7,13 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PagingNewsService {
-    @Autowired
-    private PagingNewsRepository pagingNewsRepository;
+    private final PagingNewsRepository pagingNewsRepository;
+
+    public PagingNewsService(PagingNewsRepository pagingNewsRepository){
+        this.pagingNewsRepository = pagingNewsRepository;
+    }
 
     public Page<NewsEntity> findAll(Pageable paging){
         return pagingNewsRepository.findAll(paging);

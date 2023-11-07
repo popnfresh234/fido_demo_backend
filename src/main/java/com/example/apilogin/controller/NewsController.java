@@ -4,12 +4,9 @@ import com.example.apilogin.entities.NewsEntity;
 import com.example.apilogin.exceptions.NewsException;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.repositories.NewsRepository;
-import com.example.apilogin.repositories.PagingNewsRepository;
 import com.example.apilogin.services.PagingNewsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -31,14 +31,22 @@ public class NewsController {
     private static final String OPERATION_NEWS_DELETE = "delete news";
     private static final String OPERATION_REQUEST_NEWS = "request news";
 
-    @Autowired
-    private PagingNewsService pagingNewsService;
+    private final PagingNewsService pagingNewsService;
+
+    public NewsController(PagingNewsService pagingNewsService) {
+        this.pagingNewsService = pagingNewsService;
+    }
 
     @GetMapping(path = "/paging")
-    public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(@RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize, HttpServletRequest httpServletRequest) {
+    public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam Integer pageSize,
+            HttpServletRequest httpServletRequest) {
         log.info("GET /news/paging");
         try {
-            return buildResponse(pageNumber, pageSize);
+            return buildResponse(
+                    pageNumber,
+                    pageSize);
         } catch (Exception e) {
             throw NewsException
                     .builder()
@@ -62,7 +70,9 @@ public class NewsController {
         log.info("POST /news/delete");
         try {
             pagingNewsService.deleteAllById(Arrays.asList(deleteArray));
-            return buildResponse(pageNumber, pageSize);
+            return buildResponse(
+                    pageNumber,
+                    pageSize);
         } catch (Exception e) {
             throw NewsException
                     .builder()
@@ -74,23 +84,39 @@ public class NewsController {
         }
     }
 
-    private ResponseEntity<Map<String, Object>> buildResponse(Integer pageNumber, Integer pageSize) {
+    private ResponseEntity<Map<String, Object>> buildResponse(Integer pageNumber,
+                                                              Integer pageSize) {
         List<NewsEntity> newsItems;
-        Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by("localDate").descending());
+        Pageable paging = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.by("localDate")
+                        .descending());
         Page<NewsEntity> pageNews;
         pageNews = pagingNewsService.findAll(paging);
         newsItems = pageNews.getContent();
         Map<String, Object> response = new HashMap<>();
-        response.put("newsItems", newsItems);
-        response.put("currentPage", pageNews.getNumber());
-        response.put("totalItems", pageNews.getTotalElements());
-        response.put("totalPages", pageNews.getTotalPages());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        response.put(
+                "newsItems",
+                newsItems);
+        response.put(
+                "currentPage",
+                pageNews.getNumber());
+        response.put(
+                "totalItems",
+                pageNews.getTotalElements());
+        response.put(
+                "totalPages",
+                pageNews.getTotalPages());
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.OK);
 
     }
 
     private String getUserAccount() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
         Jwt token = (Jwt) authentication.getPrincipal();
         JwtToPrincipalConverter jwtToPrincipalConverter = new JwtToPrincipalConverter();
         UserPrincipal principal = jwtToPrincipalConverter.convert(token);

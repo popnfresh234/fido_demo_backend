@@ -2,9 +2,6 @@ package com.example.apilogin.security;
 
 import com.example.apilogin.security.filters.RoleFilter;
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.KeySourceException;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -30,7 +27,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -57,7 +53,8 @@ public class WebSecurityConfig {
 
 
                 );
-        http.exceptionHandling().authenticationEntryPoint(new AuthFailureHandler());
+//        http.exceptionHandling().authenticationEntryPoint(new AuthFailureHandler());
+        http.exceptionHandling(AuthenticationEntryPoint->new AuthFailureHandler());
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http.cors(Customizer.withDefaults());
         return http.build();
@@ -104,12 +101,7 @@ public class WebSecurityConfig {
     @Bean
     public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
         var jwkSet = new JWKSet(rsaKey);
-        return new JWKSource<SecurityContext>() {
-            @Override
-            public List<JWK> get(JWKSelector jwkSelector, SecurityContext context) throws KeySourceException {
-                return jwkSelector.select(jwkSet);
-            }
-        };
+        return (jwkSelector, context) -> jwkSelector.select(jwkSet);
     }
 
 

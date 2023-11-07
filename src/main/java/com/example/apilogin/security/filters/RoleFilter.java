@@ -1,17 +1,15 @@
 package com.example.apilogin.security.filters;
 
-import com.example.apilogin.model.ErrorResponse;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.apilogin.utils.NetworkUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -34,7 +31,10 @@ public class RoleFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         log.info("Role Filter");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,26 +42,20 @@ public class RoleFilter extends OncePerRequestFilter {
         UserPrincipal principal = jwtToPrincipalConverter.convert(token);
         boolean admin = false;
 
-        for(GrantedAuthority auth : principal.getAuthorities()){
-            if(auth.getAuthority().equals("ROLE_ADMIN")){
+        for (GrantedAuthority auth : principal.getAuthorities()) {
+            if (auth.getAuthority().equals("ROLE_ADMIN")) {
                 admin = true;
             }
-        };
+        }
 
         if (!admin) {
-            ErrorResponse e = new ErrorResponse("Not Authorized");
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            OutputStream responseStream = response.getOutputStream();
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(responseStream, e);
-            responseStream.flush();
+            NetworkUtils.buildErrorResponse(response);
         }
         filterChain.doFilter(request, response);
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         RequestMatcher matcher = new NegatedRequestMatcher(this.matcher);
         return matcher.matches(request);
     }
