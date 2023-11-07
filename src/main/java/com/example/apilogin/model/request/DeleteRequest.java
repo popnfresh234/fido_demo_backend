@@ -1,4 +1,4 @@
-package com.example.apilogin.model;
+package com.example.apilogin.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

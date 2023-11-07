@@ -4,7 +4,7 @@ import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.UserEditException;
-import com.example.apilogin.model.UserRequest;
+import com.example.apilogin.model.request.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.UserLogService;

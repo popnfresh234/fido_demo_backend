@@ -1,4 +1,4 @@
-package com.example.apilogin.model;
+package com.example.apilogin.model.response;
 
 public class ErrorResponse extends Response{
 

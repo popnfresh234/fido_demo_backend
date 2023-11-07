@@ -1,4 +1,4 @@
-package com.example.apilogin.model;
+package com.example.apilogin.model.request;
 
 import lombok.Builder;
 import lombok.Getter;

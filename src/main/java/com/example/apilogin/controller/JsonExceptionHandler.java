@@ -2,7 +2,7 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.GeneralException;
-import com.example.apilogin.model.ErrorResponse;
+import com.example.apilogin.model.response.ErrorResponse;
 import com.example.apilogin.services.UserLogService;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;

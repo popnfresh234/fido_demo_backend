@@ -1,6 +1,6 @@
 package com.example.apilogin.utils;
 
-import com.example.apilogin.model.ErrorResponse;
+import com.example.apilogin.model.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
