@@ -2,6 +2,7 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.NewsEntity;
 import com.example.apilogin.exceptions.NewsException;
+import com.example.apilogin.repositories.NewsRepository;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.PagingNewsService;
@@ -18,10 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -32,9 +30,20 @@ public class NewsController {
     private static final String OPERATION_REQUEST_NEWS = "request news";
 
     private final PagingNewsService pagingNewsService;
+    private final NewsRepository newsRepository;
 
-    public NewsController(PagingNewsService pagingNewsService) {
+    public NewsController(
+            PagingNewsService pagingNewsService,
+            NewsRepository newsRepository) {
         this.pagingNewsService = pagingNewsService;
+        this.newsRepository = newsRepository;
+    }
+
+    @GetMapping(path = "/")
+    public @ResponseBody Optional<NewsEntity> getNewsItem(@RequestParam Integer id) {
+        log.info("GET /news/:id");
+        // This returns a JSON or XML with the users
+        return newsRepository.findById(id);
     }
 
     @GetMapping(path = "/paging")
@@ -84,8 +93,9 @@ public class NewsController {
         }
     }
 
-    private ResponseEntity<Map<String, Object>> buildResponse(Integer pageNumber,
-                                                              Integer pageSize) {
+    private ResponseEntity<Map<String, Object>> buildResponse(
+            Integer pageNumber,
+            Integer pageSize) {
         List<NewsEntity> newsItems;
         Pageable paging = PageRequest.of(
                 pageNumber,

@@ -24330,3 +24330,39 @@ Caused by: org.hibernate.HibernateException: Unable to determine Dialect without
 2023-11-07T14:54:44.948+08:00  INFO 54054 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
 2023-11-07T14:54:45.019+08:00  INFO 54054 --- [https-jsse-nio-8080-exec-5] c.e.a.c.AuthController                   : POST /login
 2023-11-07T14:54:45.336+08:00  INFO 54054 --- [https-jsse-nio-8080-exec-6] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-07T15:08:02.125+08:00  INFO 62226 --- [main] c.e.a.ApiLoginApplication                : Starting ApiLoginApplication using Java 17.0.8.1 with PID 62226 (/home/alex/dev/work/demo_project/backend/build/classes/java/main started by alex in /home/alex/dev/work/demo_project/backend)
+2023-11-07T15:08:02.128+08:00 DEBUG 62226 --- [main] c.e.a.ApiLoginApplication                : Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-11-07T15:08:02.129+08:00  INFO 62226 --- [main] c.e.a.ApiLoginApplication                : No active profile set, falling back to 1 default profile: "default"
+2023-11-07T15:08:02.457+08:00  INFO 62226 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-07T15:08:02.489+08:00  INFO 62226 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 6 JPA repository interfaces.
+2023-11-07T15:08:02.788+08:00  INFO 62226 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (https)
+2023-11-07T15:08:02.795+08:00  INFO 62226 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2023-11-07T15:08:02.796+08:00  INFO 62226 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-11-07T15:08:02.826+08:00  INFO 62226 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2023-11-07T15:08:02.826+08:00  INFO 62226 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 676 ms
+2023-11-07T15:08:02.864+08:00 DEBUG 62226 --- [main] c.e.a.s.f.RoleFilter                     : Filter 'roleFilter' configured for use
+2023-11-07T15:08:02.924+08:00  INFO 62226 --- [main] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-07T15:08:02.948+08:00  INFO 62226 --- [main] o.h.Version                              : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-07T15:08:02.950+08:00  INFO 62226 --- [main] o.h.c.Environment                        : HHH000406: Using bytecode reflection optimizer
+2023-11-07T15:08:03.010+08:00  INFO 62226 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-07T15:08:03.073+08:00  INFO 62226 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-07T15:08:03.082+08:00  INFO 62226 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2023-11-07T15:08:03.224+08:00  INFO 62226 --- [main] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2efcc0b3
+2023-11-07T15:08:03.226+08:00  INFO 62226 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2023-11-07T15:08:03.377+08:00  INFO 62226 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-07T15:08:03.773+08:00  INFO 62226 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-07T15:08:03.826+08:00  INFO 62226 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-07T15:08:04.735+08:00  WARN 62226 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-07T15:08:04.980+08:00  INFO 62226 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure Or [Mvc [pattern='/**']] with [org.springframework.security.web.session.DisableEncodeUrlFilter@163cd4a6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1d0f03f6, org.springframework.security.web.context.SecurityContextHolderFilter@60b8c05c, org.springframework.security.web.header.HeaderWriterFilter@75937998, org.springframework.web.filter.CorsFilter@5653429e, org.springframework.security.web.authentication.logout.LogoutFilter@2e214d39, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@36d7e8d2, com.example.apilogin.security.filters.RoleFilter@4525e9e8, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@76a86677, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4b02dc4e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@78c9c38a, org.springframework.security.web.session.SessionManagementFilter@18a349cb, org.springframework.security.web.access.ExceptionTranslationFilter@7d619bcb, org.springframework.security.web.access.intercept.AuthorizationFilter@2dc54b50]
+2023-11-07T15:08:05.198+08:00  INFO 62226 --- [main] o.a.t.u.n.N.certificate                  : Connector [https-jsse-nio-8080], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [/home/alex/.keystore] using alias [webcomm.demo.backend] with trust store [null]
+2023-11-07T15:08:05.205+08:00  INFO 62226 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (https) with context path ''
+2023-11-07T15:08:05.212+08:00  INFO 62226 --- [main] c.e.a.ApiLoginApplication                : Started ApiLoginApplication in 3.318 seconds (process running for 3.829)
+2023-11-07T15:08:19.578+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-5] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-07T15:08:19.579+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2023-11-07T15:08:19.580+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-5] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2023-11-07T15:08:21.472+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-8] c.e.a.c.AuthController                   : POST /login
+2023-11-07T15:08:21.761+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-9] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-07T15:08:22.665+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-1] c.e.a.c.NewsController                   : GET /news/:id
+2023-11-07T15:08:23.709+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-2] c.e.a.c.NewsController                   : GET /news/paging
+2023-11-07T15:08:24.447+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-4] c.e.a.c.NewsController                   : GET /news/:id
+2023-11-07T15:08:25.089+08:00  INFO 62226 --- [https-jsse-nio-8080-exec-5] c.e.a.c.NewsController                   : GET /news/paging
