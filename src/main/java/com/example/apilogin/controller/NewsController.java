@@ -42,7 +42,6 @@ public class NewsController {
     @GetMapping(path = "/")
     public @ResponseBody Optional<NewsEntity> getNewsItem(@RequestParam Integer id) {
         log.info("GET /news/:id");
-        // This returns a JSON or XML with the users
         return newsRepository.findById(id);
     }
 

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 public class UserLogEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private  Long id;
 
     private String operation;
