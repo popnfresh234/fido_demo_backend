@@ -4,11 +4,15 @@ import com.example.apilogin.security.filters.RoleFilter;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,21 +25,26 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-
+@Log4j2
 @Configuration
 @RequiredArgsConstructor
 
 public class WebSecurityConfig {
     private final RoleFilter roleFilter;
     private final CustomUserDetailService customUserDetailService;
+    private final static String secret = "thisisatest";
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
@@ -52,10 +61,10 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
 
 
+
                 );
-//        http.exceptionHandling().authenticationEntryPoint(new AuthFailureHandler());
-        http.exceptionHandling(AuthenticationEntryPoint->new AuthFailureHandler());
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+        http.oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(new AuthFailureHandler()));
         http.cors(Customizer.withDefaults());
         return http.build();
     }
@@ -79,13 +88,11 @@ public class WebSecurityConfig {
     //    1.  Create Key Pair
     @Bean
     KeyPair keyPair() {
-        try {
-            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            return keyPairGenerator.generateKeyPair();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        // Generate RSA keystore
+        // keytool -genkey -alias webcomm.demo.backend -keyalg RSA -keypass 123456 -keystore jwt.jks -storepass 123456
+        // Move jwt.jks on to classpath
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"),System.getenv("RSA_PASSWORD").toCharArray() );
+        return keyStoreKeyFactory.getKeyPair("webcomm.demo.backend", System.getenv("RSA_PASSWORD").toCharArray());
     }
 
     //    2.  Create RSA Key using Key Pair
@@ -96,6 +103,7 @@ public class WebSecurityConfig {
                 .keyID(UUID.randomUUID().toString())
                 .build();
     }
+
 
     //    3.  Create JWKSource (JSON Web Key Source)
     @Bean
@@ -108,6 +116,7 @@ public class WebSecurityConfig {
     //     4.  Use RSA  Public Key for Decoding
     @Bean
     public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
+
         return NimbusJwtDecoder.withPublicKey((RSAPublicKey) rsaKey.toPublicKey())
                 .build();
     }
@@ -115,6 +124,8 @@ public class WebSecurityConfig {
     //    Encoder
     @Bean
     public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource){
-        return new NimbusJwtEncoder(jwkSource);
+
+        SecretKey key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+                return new NimbusJwtEncoder(jwkSource);
     }
 }

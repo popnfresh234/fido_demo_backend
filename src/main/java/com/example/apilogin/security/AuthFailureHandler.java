@@ -14,6 +14,8 @@ import java.io.IOException;
 public class AuthFailureHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        log.error("Auth Error");
+        log.error(authException.getMessage());
         NetworkUtils.buildErrorResponse(response);
     }
 
