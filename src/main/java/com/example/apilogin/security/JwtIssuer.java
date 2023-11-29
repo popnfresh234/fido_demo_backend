@@ -14,7 +14,7 @@ import java.util.List;
 public class JwtIssuer {
     private final JwtEncoder jwtEncoder;
 
-    public String issue(Long userId, String account, List<String> roles){
+    public String issue(Long userId, String account, String name, String email, List<String> roles){
 
         var claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -22,6 +22,8 @@ public class JwtIssuer {
                 .expiresAt(Instant.now().plusSeconds(60 * 30))
                 .subject(String.valueOf(userId))
                 .claim("account", account)
+                .claim("email", email)
+                .claim("name", name)
                 .claim("authorities", roles)
                 .build();
         JwtEncoderParameters parameters = JwtEncoderParameters.from(claims);

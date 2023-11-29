@@ -16,6 +16,10 @@ public class UserPrincipal implements UserDetails {
 
     private final String account;
 
+    private String email;
+
+    private String name;
+
     @JsonIgnore
     private final String password;
 
@@ -56,5 +60,10 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User ID: " + userId + " Account: " + account + " Email: " + email + " Name: " + name;
     }
 }

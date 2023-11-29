@@ -5,17 +5,15 @@ import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.AuthException;
-import com.example.apilogin.model.request.LoginRequest;
-import com.example.apilogin.model.request.RecoveryRequest;
-import com.example.apilogin.model.request.ResetRequest;
-import com.example.apilogin.model.request.UserRequest;
+import com.example.apilogin.model.request.*;
 import com.example.apilogin.model.response.*;
+import com.example.apilogin.model.webauthn.request.Fido2DoRegReq;
+import com.example.apilogin.model.webauthn.request.Fido2RequestRegReq;
+import com.example.apilogin.model.webauthn.response.Fido2DoRegResp;
+import com.example.apilogin.model.webauthn.response.Fido2RequestRegResp;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
-import com.example.apilogin.services.PasswordResetService;
-import com.example.apilogin.services.RoleService;
-import com.example.apilogin.services.UserLogService;
-import com.example.apilogin.services.UserService;
+import com.example.apilogin.services.*;
 import com.example.apilogin.utils.LogUtils;
 import com.example.apilogin.utils.MailUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,6 +53,7 @@ public class AuthController {
     private final RoleService roleService;
     private final PasswordResetService passwordResetService;
     private final UserLogService userLogService;
+    private final WebauthnService webauthnService;
     private final MailUtils mailUtils;
 
     private static final String OPERATION_LOGIN = "login";
@@ -70,6 +69,7 @@ public class AuthController {
                           RoleService roleService,
                           PasswordResetService passwordResetService,
                           UserLogService userLogService,
+                          WebauthnService webauthnService,
                           MailUtils mailUtils) {
         this.jwtIssuer = jwtIssuer;
         this.authenticationManager = authenticationManager;
@@ -78,6 +78,7 @@ public class AuthController {
         this.roleService = roleService;
         this.passwordResetService = passwordResetService;
         this.userLogService = userLogService;
+        this.webauthnService = webauthnService;
         this.mailUtils = mailUtils;
     }
 
@@ -90,7 +91,9 @@ public class AuthController {
             var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getAccount(), request.getPassword()));
             var principal = (UserPrincipal) authentication.getPrincipal();
             var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            var token = jwtIssuer.issue(principal.getUserId(), principal.getAccount(), roles);
+            var token = jwtIssuer.issue(principal.getUserId(), principal.getAccount(),
+
+                                        principal.getName(),principal.getEmail(), roles);
 //        Log user logging in
             Optional<UserEntity> opt = userService.findByAccount(request.getAccount());
             UserEntity user = opt.orElseThrow();
@@ -212,6 +215,31 @@ public class AuthController {
         } catch (Exception e) {
             throw AuthException.builder().msg(e.getMessage()).operation(OPERATION_RECOVERY_REQUEST).ip(httpServletRequest.getRemoteAddr()).target(request.getAccount()).build();
         }
+    }
+
+    @PostMapping(path = "/requestReg")
+    public Fido2RequestRegResp requestReg(
+            @RequestBody Fido2RequestRegReq req,
+            HttpServletRequest httpServletRequest) {
+        log.info("POST /requestReg");
+
+        try {
+            req.getBody().setUsername(LogUtils.getPrincipal().getUsername());
+            req.getBody().setDisplayName(LogUtils.getPrincipal().getName());
+//            req.getBody().setOrigin("https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
+//            req.getBody().setRpId("demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
+            req.getBody().setOrigin("https://localhost:4200");
+            req.getBody().setRpId("localhost");
+            req.getBody().setRpName("Fido Lab Relying Party");
+            return webauthnService.requestReg(req);
+        } catch (Exception e) {
+            throw AuthException.builder().msg(e.getMessage()).operation(OPERATION_LOGIN).ip(httpServletRequest.getRemoteAddr()).target(LogUtils.getUserAccount()).build();
+        }
+    }
+
+    @PostMapping(path="/doReg")
+    public Fido2DoRegResp doReg(@RequestBody Fido2DoRegReq req) {
+        return webauthnService.doReg(req);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

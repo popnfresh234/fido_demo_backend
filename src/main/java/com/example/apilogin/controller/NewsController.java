@@ -6,6 +6,7 @@ import com.example.apilogin.repositories.NewsRepository;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.PagingNewsService;
+import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,7 @@ public class NewsController {
                     .msg(e.getMessage())
                     .operation(OPERATION_REQUEST_NEWS)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(getUserAccount())
+                    .target(LogUtils.getUserAccount())
                     .build();
         }
     }
@@ -87,7 +88,7 @@ public class NewsController {
                     .msg(e.getMessage())
                     .operation(OPERATION_NEWS_DELETE)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(getUserAccount())
+                    .target(LogUtils.getUserAccount())
                     .build();
         }
     }
@@ -123,12 +124,5 @@ public class NewsController {
 
     }
 
-    private String getUserAccount() {
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        Jwt token = (Jwt) authentication.getPrincipal();
-        JwtToPrincipalConverter jwtToPrincipalConverter = new JwtToPrincipalConverter();
-        UserPrincipal principal = jwtToPrincipalConverter.convert(token);
-        return principal.getAccount();
-    }
+
 }

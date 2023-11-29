@@ -28,7 +28,11 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
         Optional<UserEntity> user = userRepository.findByAccount(account);
         if (user.isPresent()) {
-            return UserPrincipal.builder().userId(user.get().getId()).account(user.get().getAccount())
+            return UserPrincipal.builder()
+                    .userId(user.get().getId())
+                    .account(user.get().getAccount())
+                    .email(user.get().getEmail())
+                    .name(user.get().getName())
                     .authorities(buildAuthorities(user.get())).password(user.get().getPassword()).build();
         } else {
             throw new DataAccessException("This user cannot be found") {
