@@ -57,7 +57,7 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**", "/logout").permitAll()
+                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**", "/auth/requestAuth", "/auth/doAuth", "/logout").permitAll()
                         .anyRequest().authenticated()
 
 
@@ -66,6 +66,7 @@ public class WebSecurityConfig {
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         http.oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(new AuthFailureHandler()));
         http.cors(Customizer.withDefaults());
+
         return http.build();
     }
 

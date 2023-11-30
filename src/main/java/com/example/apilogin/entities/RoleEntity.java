@@ -14,7 +14,7 @@ import lombok.Setter;
 
 public class RoleEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message="Role is mandatory")

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 public class NewsEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     private  String source;
     private String title;
