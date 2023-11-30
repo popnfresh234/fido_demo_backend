@@ -308,8 +308,6 @@ public class AuthController {
         try {
             req.getBody().setUsername(LogUtils.getPrincipal().getUsername());
             req.getBody().setDisplayName(LogUtils.getPrincipal().getName());
-//            req.getBody().setOrigin("https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
-//            req.getBody().setRpId("demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
             req.getBody().setOrigin(fidoOrigin);
             req.getBody().setRpId(fidoRpId);
             req.getBody().setRpName("Fido Lab Relying Party");
@@ -329,10 +327,6 @@ public class AuthController {
     public Fido2RequestAuthResp requestAuth(@RequestBody Fido2RequestAuthReq req) {
         String username = req.getBody().getUsername();
         UserSingleton.getInstance().setUsername(username);
-        // req.getBody().setOrigin("https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
-        // req.getBody().setRpId("demo-frontend-alex-demo.apps.oc.webcomm.com.tw");
-
-        // Localhost$
         req.getBody().setOrigin(fidoOrigin);
         req.getBody().setRpId(fidoRpId);
         return webauthnService.requestAuth(req);
