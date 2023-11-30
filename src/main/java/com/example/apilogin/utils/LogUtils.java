@@ -1,7 +1,6 @@
 package com.example.apilogin.utils;
 
 import com.example.apilogin.entities.UserLogEntity;
-import com.example.apilogin.repositories.UserLogRepository;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.UserLogService;
@@ -12,6 +11,14 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import java.time.LocalDateTime;
 
 public class LogUtils {
+
+
+    public static final String OPERATION_LOGIN = "login";
+    public static final String OPERATION_SIGNUP = "signup";
+    public static final String OPERATION_RECOVERY_REQUEST = "recovery_request";
+    public static final String OPERATION_RECOVERY_VERIFY = "recovery_verify";
+    public static final String OPERATION_RECOVERY_RESET = "recovery_reset";
+
     public static UserLogEntity buildLog(UserLogService userLogService, String operation, String target, String ip, String msg, boolean success){
         UserLogEntity log = new UserLogEntity();
         log.setOperation(operation);
@@ -24,20 +31,5 @@ public class LogUtils {
         return log;
     }
 
-    public static String getUserAccount() {
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        Jwt token = (Jwt) authentication.getPrincipal();
-        JwtToPrincipalConverter jwtToPrincipalConverter = new JwtToPrincipalConverter();
-        UserPrincipal principal = jwtToPrincipalConverter.convert(token);
-        return principal.getAccount();
-    }
 
-    public static UserPrincipal getPrincipal(){
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        Jwt token = (Jwt) authentication.getPrincipal();
-        JwtToPrincipalConverter jwtToPrincipalConverter = new JwtToPrincipalConverter();
-        return jwtToPrincipalConverter.convert(token);
-    }
 }

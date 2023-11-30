@@ -1,15 +1,14 @@
 package com.example.apilogin.services;
 
-import com.example.apilogin.model.webauthn.request.Fido2DoAuthReq;
-import com.example.apilogin.model.webauthn.request.Fido2DoRegReq;
-import com.example.apilogin.model.webauthn.request.Fido2RequestAuthReq;
-import com.example.apilogin.model.webauthn.request.Fido2RequestRegReq;
-import com.example.apilogin.model.webauthn.response.Fido2DoAuthResp;
-import com.example.apilogin.model.webauthn.response.Fido2DoRegResp;
-import com.example.apilogin.model.webauthn.response.Fido2RequestAuthResp;
-import com.example.apilogin.model.webauthn.response.Fido2RequestRegResp;
+import com.example.apilogin.model.webauthn.request.auth.req_do_auth.Fido2DoAuthReq;
+import com.example.apilogin.model.webauthn.request.reg.do_req.Fido2DoRegReq;
+import com.example.apilogin.model.webauthn.request.auth.req_auth.Fido2RequestAuthReq;
+import com.example.apilogin.model.webauthn.request.reg.req_reg.Fido2RequestRegReq;
+import com.example.apilogin.model.webauthn.response.auth.do_auth.Fido2DoAuthResp;
+import com.example.apilogin.model.webauthn.response.reg.do_reg.Fido2DoRegResp;
+import com.example.apilogin.model.webauthn.response.auth.req_auth.Fido2RequestAuthResp;
+import com.example.apilogin.model.webauthn.response.reg.req_reg.Fido2RequestRegResp;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,11 @@ public class WebauthnService {
     @Value("${fido.middleware.url}")
     private String fidoMiddlewareUrl;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    public WebauthnService(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
 
     public Fido2RequestRegResp requestReg(Fido2RequestRegReq req) {
         String url = fidoMiddlewareUrl + REQUEST_REG;
@@ -64,7 +66,7 @@ public class WebauthnService {
     }
 
     public Fido2DoAuthResp doAuth(Fido2DoAuthReq req) {
-        String url = new StringBuilder(fidoMiddlewareUrl).append(DO_AUTH).toString();
+        String url = fidoMiddlewareUrl + DO_AUTH;
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Fido2DoAuthReq> httpEntity = new HttpEntity<>(req, requestHeaders);

@@ -3,9 +3,8 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.NewsEntity;
 import com.example.apilogin.exceptions.NewsException;
 import com.example.apilogin.repositories.NewsRepository;
-import com.example.apilogin.security.JwtToPrincipalConverter;
-import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.PagingNewsService;
+import com.example.apilogin.utils.AuthUtils;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
@@ -15,9 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -62,7 +58,7 @@ public class NewsController {
                     .msg(e.getMessage())
                     .operation(OPERATION_REQUEST_NEWS)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(LogUtils.getUserAccount())
+                    .target(AuthUtils.getPrincipal().getAccount())
                     .build();
         }
     }
@@ -88,7 +84,7 @@ public class NewsController {
                     .msg(e.getMessage())
                     .operation(OPERATION_NEWS_DELETE)
                     .ip(httpServletRequest.getRemoteAddr())
-                    .target(LogUtils.getUserAccount())
+                    .target(AuthUtils.getPrincipal().getAccount())
                     .build();
         }
     }
