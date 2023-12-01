@@ -10,9 +10,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class NetworkUtils {
-    public static void buildErrorResponse(HttpServletResponse response) throws IOException {
+
+    public static void buildErrorResponse(HttpServletResponse response, HttpStatus httpStatus) throws IOException {
         ErrorResponse e = new ErrorResponse("Not Authorized");
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setStatus(httpStatus.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         OutputStream responseStream = response.getOutputStream();
         ObjectMapper mapper = new ObjectMapper();

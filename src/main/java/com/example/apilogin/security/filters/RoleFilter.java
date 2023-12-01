@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,7 +50,8 @@ public class RoleFilter extends OncePerRequestFilter {
         }
 
         if (!admin) {
-            NetworkUtils.buildErrorResponse(response);
+            NetworkUtils.buildErrorResponse(response,
+                                            HttpStatus.FORBIDDEN);
         }
         filterChain.doFilter(request, response);
     }

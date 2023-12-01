@@ -21,10 +21,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -35,6 +34,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.UUID;
 
 @Log4j2
@@ -48,7 +48,9 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
-        http.addFilterBefore(roleFilter, BasicAuthenticationFilter.class);
+        http.addFilterBefore(
+                roleFilter,
+                BasicAuthenticationFilter.class);
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session
@@ -57,9 +59,14 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/", "/auth/signup", "/auth/login", "/auth/recovery/**", "/webauthn/**", "/logout").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/auth/signup",
+                                "/auth/login",
+                                "/auth/recovery/**",
+                                "/webauthn/**",
+                                "/logout").permitAll()
                         .anyRequest().authenticated()
-
 
 
                 );
@@ -68,7 +75,6 @@ public class WebSecurityConfig {
         http.cors(Customizer.withDefaults());
         return http.build();
     }
-
 
 
     @Bean
@@ -91,8 +97,11 @@ public class WebSecurityConfig {
         // Generate RSA keystore
         // keytool -genkey -alias webcomm.demo.backend -keyalg RSA -keypass 123456 -keystore jwt.jks -storepass 123456
         // Move jwt.jks on to classpath
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"),System.getenv("RSA_PASSWORD").toCharArray() );
-        return keyStoreKeyFactory.getKeyPair("webcomm.demo.backend", System.getenv("RSA_PASSWORD").toCharArray());
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"),
+                                                                       System.getenv("RSA_PASSWORD").toCharArray());
+        return keyStoreKeyFactory.getKeyPair(
+                "webcomm.demo.backend",
+                System.getenv("RSA_PASSWORD").toCharArray());
     }
 
     //    2.  Create RSA Key using Key Pair
@@ -116,16 +125,23 @@ public class WebSecurityConfig {
     //     4.  Use RSA  Public Key for Decoding
     @Bean
     public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
-
-        return NimbusJwtDecoder.withPublicKey((RSAPublicKey) rsaKey.toPublicKey())
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey((RSAPublicKey) rsaKey.toPublicKey())
                 .build();
+
+        //  Default clock skew is 60 seconds, uncomment to change if needed for testing
+        //        OAuth2TokenValidator<Jwt> withClockSkew = new DelegatingOAuth2TokenValidator<>(
+        //                new JwtTimestampValidator(Duration.ofSeconds(1)));
+        //        jwtDecoder.setJwtValidator(withClockSkew);
+        return jwtDecoder;
     }
 
     //    Encoder
     @Bean
-    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource){
+    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
 
-        SecretKey key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
-                return new NimbusJwtEncoder(jwkSource);
+        SecretKey key = new SecretKeySpec(
+                secret.getBytes(),
+                "HmacSHA256");
+        return new NimbusJwtEncoder(jwkSource);
     }
 }

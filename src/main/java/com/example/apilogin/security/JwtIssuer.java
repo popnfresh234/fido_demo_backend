@@ -19,7 +19,7 @@ public class JwtIssuer {
         var claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plusSeconds(60 * 30))
+                .expiresAt(Instant.now().plusSeconds(60 * 30)) // Clock skew is default 60 seconds, so nothing below 60s will work
                 .subject(String.valueOf(userId))
                 .claim("account", account)
                 .claim("email", email)
