@@ -11,5 +11,5 @@ import lombok.Setter;
 public class Fido2DoAuthRestRequestBody {
 	private AuthPublicKeyCredential publicKeyCredential;
 	private String tokenBindingId;
-
+	private String username;
 }

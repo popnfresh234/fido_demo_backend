@@ -17,7 +17,6 @@ import com.example.apilogin.services.UserService;
 import com.example.apilogin.services.WebauthnService;
 import com.example.apilogin.utils.AuthUtils;
 import com.example.apilogin.utils.LogUtils;
-import com.example.apilogin.utils.UserSingleton;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +70,8 @@ public class WebauthnController {
             req.getBody().setRpName("Fido Lab Relying Party");
             return webauthnService.requestReg(req);
         } catch (Exception e) {
+            log.error("requestReg Exception");
+            log.error(e.getMessage());
             throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_LOGIN)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
@@ -84,7 +85,6 @@ public class WebauthnController {
     @PostMapping(path = "/requestAuth")
     public Fido2RequestAuthResp requestAuth(@RequestBody Fido2RequestAuthReq req) {
         String username = req.getBody().getUsername();
-        UserSingleton.getInstance().setUsername(username);
         req.getBody().setOrigin(fidoOrigin);
         req.getBody().setRpId(fidoRpId);
         return webauthnService.requestAuth(req);
@@ -101,7 +101,7 @@ public class WebauthnController {
         }
         try {
             // Look up the user by account
-            Optional<UserEntity> opt = userService.findByAccount(UserSingleton.getInstance().getUsername());
+            Optional<UserEntity> opt = userService.findByAccount(req.getBody().getUsername());
             UserEntity user = opt.orElseThrow();
 
             // Login user with correct roles
@@ -137,9 +137,10 @@ public class WebauthnController {
                     token,
                     stringAuths));
 
-            //Clear out singleton
-            UserSingleton.getInstance().setUsername("");
         } catch (Exception e) {
+            log.error("doAuth exception");
+            log.error(e.getMessage());
+            log.error(e.getStackTrace());
             throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_LOGIN)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }

@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Fido2RequestAuthRestResponseBody {
-
 	private List<PublicKeyCredentialDescriptor> allowCredentials;
 	private String challenge;
 	private Object extensions;

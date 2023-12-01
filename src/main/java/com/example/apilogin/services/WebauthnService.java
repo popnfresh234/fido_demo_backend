@@ -61,7 +61,6 @@ public class WebauthnService {
         HttpEntity<Fido2RequestAuthReq> httpEntity = new HttpEntity<>(req, requestHeaders);
         ResponseEntity<Fido2RequestAuthResp> res = restTemplate.exchange(url, HttpMethod.POST, httpEntity,
                                                                          Fido2RequestAuthResp.class);
-
         return res.getBody();
     }
 
