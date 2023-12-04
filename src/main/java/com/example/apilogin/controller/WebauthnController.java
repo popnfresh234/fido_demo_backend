@@ -56,6 +56,10 @@ public class WebauthnController {
         this.userService = userService;
     }
 
+    // ***************************************
+    // Request Registration
+    // ***************************************
+
     @PostMapping(path = "/requestReg")
     public Fido2RequestRegResp requestReg(
             @RequestBody Fido2RequestRegReq req,
@@ -70,35 +74,65 @@ public class WebauthnController {
             req.getBody().setRpName("Fido Lab Relying Party");
             return webauthnService.requestReg(req);
         } catch (Exception e) {
-            log.error("requestReg Exception");
+            log.error("reqReg Exception");
             log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_LOGIN)
+            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
+    // ***************************************
+    // Do Registration
+    // ***************************************
+
     @PostMapping(path = "/doReg")
-    public Fido2DoRegResp doReg(@RequestBody Fido2DoRegReq req) {
-        return webauthnService.doReg(req);
+    public Fido2DoRegResp doReg(
+            @RequestBody Fido2DoRegReq req,
+            HttpServletRequest httpServletRequest) {
+        try {
+            return webauthnService.doReg(req);
+        } catch (Exception e) {
+            log.error("doReg Exception");
+            log.error(e.getMessage());
+            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_REG_REQ)
+                    .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
+        }
     }
+
+    // ***************************************
+    // Request Authorization
+    // ***************************************
 
     @PostMapping(path = "/requestAuth")
-    public Fido2RequestAuthResp requestAuth(@RequestBody Fido2RequestAuthReq req) {
-        String username = req.getBody().getUsername();
-        req.getBody().setOrigin(fidoOrigin);
-        req.getBody().setRpId(fidoRpId);
-        return webauthnService.requestAuth(req);
+    public Fido2RequestAuthResp requestAuth(@RequestBody Fido2RequestAuthReq req, HttpServletRequest httpServletRequest) {
+        try {
+            req.getBody().setOrigin(fidoOrigin);
+            req.getBody().setRpId(fidoRpId);
+            return webauthnService.requestAuth(req);
+        } catch (Exception e) {
+            log.error("reqAuth Exception");
+            log.error(e.getMessage());
+            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_AUTH_REQ)
+                    .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
+        }
     }
 
+    // ***************************************
+    // Do Authorization
+    // ***************************************
 
     @PostMapping(path = "/doAuth")
-    public Fido2DoAuthResp doAuth(@RequestBody Fido2DoAuthReq req, HttpServletRequest httpServletRequest) {
+    public Fido2DoAuthResp doAuth(
+            @RequestBody Fido2DoAuthReq req,
+            HttpServletRequest httpServletRequest) {
 
         Fido2DoAuthResp res = webauthnService.doAuth(req);
         //If auth fails, throw auth exception
         if (!res.getHeader().getCode().equals("1200")) {
             throw AuthException.builder().msg("Authorization Failed").build();
         }
+
+        // Success, try to log user in
         try {
             // Look up the user by account
             Optional<UserEntity> opt = userService.findByAccount(req.getBody().getUsername());
@@ -140,8 +174,7 @@ public class WebauthnController {
         } catch (Exception e) {
             log.error("doAuth exception");
             log.error(e.getMessage());
-            log.error(e.getStackTrace());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_LOGIN)
+            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
         return res;
