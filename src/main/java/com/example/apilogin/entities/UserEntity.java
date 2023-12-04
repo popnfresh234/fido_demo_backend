@@ -62,6 +62,8 @@ public class UserEntity {
     @Column(length=100000)
     private byte[] image;
 
+    private String imageName;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn

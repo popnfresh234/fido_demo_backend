@@ -74,6 +74,8 @@ public class UserController {
             setUserData(foundUser, editRequest.getName(), editRequest.getBirthdate(), editRequest.getCity(), editRequest.getDistrict(),
                     editRequest.getStreet(), editRequest.getAlley(), editRequest.getLane(), editRequest.getFloor());
             foundUser.setImage(editRequest.getImage().getBytes());
+            foundUser.setImageName(editRequest.getImageName());
+            log.error(editRequest.getImageName());
             UserLogEntity log = LogUtils.buildLog(
                     userLogService,
                     OPERATION_EDIT_USER,

@@ -51,4 +51,6 @@ public class UserRequest {
     private String floor;
 
     private MultipartFile image;
+
+    private String imageName;
 }
