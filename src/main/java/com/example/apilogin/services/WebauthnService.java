@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Log4j2
@@ -33,17 +34,16 @@ public class WebauthnService {
         this.restTemplate = restTemplate;
     }
 
-    public Fido2RequestRegResp requestReg(Fido2RequestRegReq req) {
+    public Fido2RequestRegResp requestReg(Fido2RequestRegReq req) throws RestClientException {
         String url = fidoMiddlewareUrl + REQUEST_REG;
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Fido2RequestRegReq> httpEntity = new HttpEntity<>(req, requestHeaders);
-        ResponseEntity<Fido2RequestRegResp> res = restTemplate.exchange(url, HttpMethod.POST, httpEntity,
-                                                                        Fido2RequestRegResp.class);
+        ResponseEntity<Fido2RequestRegResp> res = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Fido2RequestRegResp.class);
         return res.getBody();
     }
 
-    public Fido2DoRegResp doReg(Fido2DoRegReq req) {
+    public Fido2DoRegResp doReg(Fido2DoRegReq req) throws RestClientException{
 
         String url = fidoMiddlewareUrl + DO_REG;
         HttpHeaders requestHeaders = new HttpHeaders();
@@ -54,7 +54,7 @@ public class WebauthnService {
         return res.getBody();
     }
 
-    public Fido2RequestAuthResp requestAuth(Fido2RequestAuthReq req) {
+    public Fido2RequestAuthResp requestAuth(Fido2RequestAuthReq req) throws RestClientException{
         String url = fidoMiddlewareUrl + REQUEST_AUTH;
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -64,7 +64,7 @@ public class WebauthnService {
         return res.getBody();
     }
 
-    public Fido2DoAuthResp doAuth(Fido2DoAuthReq req) {
+    public Fido2DoAuthResp doAuth(Fido2DoAuthReq req) throws RestClientException {
         String url = fidoMiddlewareUrl + DO_AUTH;
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);

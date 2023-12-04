@@ -18,6 +18,11 @@ public class LogUtils {
     public static final String OPERATION_RECOVERY_REQUEST = "recovery_request";
     public static final String OPERATION_RECOVERY_VERIFY = "recovery_verify";
     public static final String OPERATION_RECOVERY_RESET = "recovery_reset";
+    public static final String REQ_REG_REQ = "webauthn_req_reg_req";
+    public static final String DO_REG_REQ = "webauthn_do_req_req";
+    public static final String REQ_AUTH_REQ = "webauthn_req_auth_req";
+    public static final String DO_AUTH_REQ = "webauthn_do_auth_req";
+
 
     public static UserLogEntity buildLog(UserLogService userLogService, String operation, String target, String ip, String msg, boolean success){
         UserLogEntity log = new UserLogEntity();
