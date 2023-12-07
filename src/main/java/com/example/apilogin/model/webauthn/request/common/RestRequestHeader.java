@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestRequestHeader {
-
 	private String appVersion;
 	private String channelCode;
 	private String deviceBrand;
