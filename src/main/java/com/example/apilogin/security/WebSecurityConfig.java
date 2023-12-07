@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                                 "/auth/login",
                                 "/auth/recovery/**",
                                 "/webauthn/**",
+                                "/uaf/**",
                                 "/logout").permitAll()
                         .anyRequest().authenticated()
 
