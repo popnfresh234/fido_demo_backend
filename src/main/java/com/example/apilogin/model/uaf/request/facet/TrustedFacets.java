@@ -1,5 +1,6 @@
 package com.example.apilogin.model.uaf.request.facet;
 
+import com.example.apilogin.model.uaf.common.Version;
 import lombok.Getter;
 import lombok.Setter;
 

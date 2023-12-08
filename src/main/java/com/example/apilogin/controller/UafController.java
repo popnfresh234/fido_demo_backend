@@ -5,6 +5,7 @@ import com.example.apilogin.model.response.Response;
 import com.example.apilogin.model.uaf.request.facet.ResFacets;
 import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegReq;
 import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegRestRequestBody;
+import com.example.apilogin.model.uaf.response.reg.RequestRegResp;
 import com.example.apilogin.model.webauthn.request.reg.req_reg.Fido2RequestRegReq;
 import com.example.apilogin.services.UafService;
 import com.example.apilogin.utils.AuthUtils;
@@ -31,19 +32,24 @@ public class UafController {
     }
 
 
-    @GetMapping(path = "/requestReg")
-    public Response test(
+    @GetMapping(path="/test")
+    public Response test(){
+        return new Response("This is a test");
+    }
+
+    @PostMapping(path = "/requestReg")
+    public RequestRegResp requestReg(
             @RequestBody
             UafRequestRegReq uafRequestRegReq,
             HttpServletRequest httpServletRequest) {
+
+
+        log.info("POST /uaf/requestReg" );
+
         uafRequestRegReq.getBody().setAppID(appId);
-        uafRequestRegReq.getBody().setRpServerData("");
-
+        uafRequestRegReq.getBody().setRpServerData("testdata");
         try {
-            HttpResponse<String> res = uafService.requestReg(uafRequestRegReq);
-            log.error(res);
-
-            return new Response(res.body());
+            return uafService.requestReg(uafRequestRegReq);
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("uafReqReg Exception");

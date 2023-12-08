@@ -3,9 +3,13 @@ package com.example.apilogin.services;
 import com.example.apilogin.model.response.Response;
 import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegReq;
 import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegRestRequestBody;
+import com.example.apilogin.model.uaf.response.reg.RequestRegResp;
 import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -20,7 +24,7 @@ import java.net.http.HttpResponse;
 public class UafService {
     private static final String facet_url = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/facets?appID=https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw/api/uaf/facets";
     private static final String REQ_REG_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/requestReg";
-
+    private static final String BIN_URL = "https://httpbin.org/post";
     public HttpResponse<String> getFacets() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
@@ -32,14 +36,29 @@ public class UafService {
 
     }
 
-    public HttpResponse<String> requestReg(UafRequestRegReq req) throws Exception {
-        Gson gson = new Gson();
-        log.error(gson.toJson(req));
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest regReq = HttpRequest.newBuilder()
-                .uri(URI.create(REQ_REG_URL))
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(req)))
-                .build();
-        return client.send(regReq, HttpResponse.BodyHandlers.ofString());
+    public RequestRegResp requestReg(UafRequestRegReq req) throws Exception {
+
+
+        WebClient webClient = WebClient.create();
+        return webClient.post()
+                .uri(REQ_REG_URL)
+                .header("applicationContent-type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(req))
+                .retrieve()
+                .bodyToMono(RequestRegResp.class)
+                .block();
+
+//        log.error(response);
+//
+//        Gson gson = new Gson();
+//        log.error(gson.toJson(req));
+//        HttpClient client = HttpClient.newHttpClient();
+//        HttpRequest regReq = HttpRequest.newBuilder()
+//                .uri(URI.create(BIN_URL))
+//                .setHeader("applicationContent-type", "application/json")
+//                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(req)))
+//                .build();
+//        return client.send(regReq, HttpResponse.BodyHandlers.ofString());
     }
 }
