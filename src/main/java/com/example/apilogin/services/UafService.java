@@ -1,20 +1,22 @@
 package com.example.apilogin.services;
 
-import com.example.apilogin.model.response.Response;
-import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegReq;
-import com.example.apilogin.model.uaf.request.reg.req_reg.UafRequestRegRestRequestBody;
-import com.example.apilogin.model.uaf.response.reg.RequestRegResp;
-import com.nimbusds.jose.shaded.gson.Gson;
+import com.example.apilogin.model.uaf.request.auth.do_auth_req.UafDoAuthReq;
+import com.example.apilogin.model.uaf.request.auth.req_auth_req.UafRequestAuthReq;
+import com.example.apilogin.model.uaf.request.reg.do_dereg_req.UafDoDeregReq;
+import com.example.apilogin.model.uaf.request.reg.do_reg_req.UafDoRegReq;
+import com.example.apilogin.model.uaf.request.reg.reg_req.UafRequestRegReq;
+import com.example.apilogin.model.uaf.response.auth.do_auth_res.UafDoAuthRes;
+import com.example.apilogin.model.uaf.response.auth.req_auth_res.UafRequestAuthRes;
+import com.example.apilogin.model.uaf.response.reg.do_dergeg_res.UafDoDeregRes;
+import com.example.apilogin.model.uaf.response.reg.do_reg_res.UafDoRegRes;
+import com.example.apilogin.model.uaf.response.reg.req_reg_res.UafReqRegRes;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -24,7 +26,15 @@ import java.net.http.HttpResponse;
 public class UafService {
     private static final String facet_url = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/facets?appID=https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw/api/uaf/facets";
     private static final String REQ_REG_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/requestReg";
+    private static final String DO_REG_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/doReg";
+    private static final String DO_DEREG_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/doDereg";
+    private static final String REQ_AUTH_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/requestAuth";
+    private static final String DO_AUTH_URL = "https://fidolab.apps.oc.webcomm.com.tw/identity-svr/rest/doAuth";
+
+
     private static final String BIN_URL = "https://httpbin.org/post";
+
+
     public HttpResponse<String> getFacets() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
@@ -33,12 +43,9 @@ public class UafService {
         return client.send(
                 req,
                 HttpResponse.BodyHandlers.ofString());
-
     }
 
-    public RequestRegResp requestReg(UafRequestRegReq req) throws Exception {
-
-
+    public UafReqRegRes requestReg(UafRequestRegReq req) throws Exception {
         WebClient webClient = WebClient.create();
         return webClient.post()
                 .uri(REQ_REG_URL)
@@ -46,19 +53,56 @@ public class UafService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(req))
                 .retrieve()
-                .bodyToMono(RequestRegResp.class)
+                .bodyToMono(UafReqRegRes.class)
                 .block();
+    }
 
-//        log.error(response);
-//
-//        Gson gson = new Gson();
-//        log.error(gson.toJson(req));
-//        HttpClient client = HttpClient.newHttpClient();
-//        HttpRequest regReq = HttpRequest.newBuilder()
-//                .uri(URI.create(BIN_URL))
-//                .setHeader("applicationContent-type", "application/json")
-//                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(req)))
-//                .build();
-//        return client.send(regReq, HttpResponse.BodyHandlers.ofString());
+    public UafDoRegRes doReg(UafDoRegReq req) throws Exception {
+        WebClient webClient = WebClient.create();
+        return webClient.post()
+                .uri(DO_REG_URL)
+                .header("applicationContent-type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(req))
+                .retrieve()
+                .bodyToMono(UafDoRegRes.class)
+                .block();
+    }
+
+    public UafDoDeregRes doDeReg(UafDoDeregReq req) throws Exception {
+        WebClient webClient = WebClient.create();
+        return webClient.post()
+                .uri(DO_DEREG_URL)
+                .header("applicationContent-type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(req))
+                .retrieve()
+                .bodyToMono(UafDoDeregRes.class)
+                .block();
+    }
+
+    public UafRequestAuthRes requestAuth(UafRequestAuthReq req) throws Exception {
+        WebClient webClient = WebClient.create();
+        return webClient.post()
+                .uri(REQ_AUTH_URL)
+                .header("applicationContent-type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(req))
+                .retrieve()
+                .bodyToMono(UafRequestAuthRes.class)
+                .block();
+    }
+
+
+    public UafDoAuthRes doAuth(UafDoAuthReq req) throws Exception {
+        WebClient webClient = WebClient.create();
+        return webClient.post()
+                .uri(DO_AUTH_URL)
+                .header("applicationContent-type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(req))
+                .retrieve()
+                .bodyToMono(UafDoAuthRes.class)
+                .block();
     }
 }

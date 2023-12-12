@@ -1,4 +1,4 @@
-package com.example.apilogin.model.uaf.response.reg;
+package com.example.apilogin.model.uaf.common;
 
 import com.example.apilogin.model.uaf.common.Extension;
 import com.example.apilogin.model.uaf.common.Version;

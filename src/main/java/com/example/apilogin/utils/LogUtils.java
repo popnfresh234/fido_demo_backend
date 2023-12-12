@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class LogUtils {
 
-
+    //FIDO2
     public static final String OPERATION_LOGIN = "login";
     public static final String OPERATION_SIGNUP = "signup";
     public static final String OPERATION_RECOVERY_REQUEST = "recovery_request";
@@ -23,8 +23,30 @@ public class LogUtils {
     public static final String REQ_AUTH_REQ = "webauthn_req_auth_req";
     public static final String DO_AUTH_REQ = "webauthn_do_auth_req";
 
+    //UAF
+    public static final String UAF_REQ_REG_REQ = "uaf_req_reg_req";
+    public static final String UAF_REQ_REG_RES = "uaf_req_reg_res";
 
-    public static UserLogEntity buildLog(UserLogService userLogService, String operation, String target, String ip, String msg, boolean success){
+    public static final String UAF_DO_REG_REQ = "uaf_do_reg_req";
+    public static final String UAF_DO_REG_RES = "uaf_do_reg_res";
+
+
+    public static final String UAF_REQ_AUTH_REQ = "uaf_req_auth_req";
+    public static final String UAF_REQ_AUTH_RES = "uaf_req_auth_res";
+
+    public static final String UAF_DO_AUTH_REQ = "uaf_do_auth_req";
+    public static final String UAF_DO_AUTH_RES = "uaf_do_auth_res";
+
+
+    public static final String UAF_DO_DEREG_REQ = "uaf_do_dereg_req";
+
+    public static UserLogEntity buildLog(
+            UserLogService userLogService,
+            String operation,
+            String target,
+            String ip,
+            String msg,
+            boolean success) {
         UserLogEntity log = new UserLogEntity();
         log.setOperation(operation);
         log.setIp(ip);

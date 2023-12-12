@@ -1,4 +1,4 @@
-package com.example.apilogin.model.uaf.request.reg.req_reg;
+package com.example.apilogin.model.uaf.request.reg.reg_req;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
