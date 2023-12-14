@@ -24,6 +24,9 @@ public class LogUtils {
     public static final String DO_AUTH_REQ = "webauthn_do_auth_req";
 
     //UAF
+
+    public static final String UAF_REQ_FACETS_REQ = "uaf_req_facets_req";
+
     public static final String UAF_REQ_REG_REQ = "uaf_req_reg_req";
     public static final String UAF_REQ_REG_RES = "uaf_req_reg_res";
 
@@ -39,6 +42,12 @@ public class LogUtils {
 
 
     public static final String UAF_DO_DEREG_REQ = "uaf_do_dereg_req";
+
+    public static final String UAF_REQ_QR_CODE_REQ = "uaf_req_qrcde_req";
+    public static final String UAF_VALIDATE_QR_CODE_REQ = "uaf_validate_qrcde_req";
+
+
+    public static final String UAF_REQ_PAIR_AUTH_REQ = "uaf_req_pair_auth_req";
 
     public static UserLogEntity buildLog(
             UserLogService userLogService,
