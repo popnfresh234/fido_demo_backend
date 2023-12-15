@@ -76,6 +76,8 @@ public class WebauthnController {
         } catch (Exception e) {
             log.error("reqReg Exception");
             log.error(e.getMessage());
+
+
             throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }

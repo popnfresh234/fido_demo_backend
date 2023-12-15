@@ -3,7 +3,7 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.GeneralException;
-import com.example.apilogin.exceptions.UserEditException;
+import com.example.apilogin.exceptions.UserException;
 import com.example.apilogin.model.request.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
 import com.example.apilogin.security.UserPrincipal;
@@ -53,7 +53,7 @@ public class UserController {
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw GeneralException.builder().msg("User not found").build();
+            throw UserException.builder().msg("User not found").build();
         }
     }
 
@@ -87,7 +87,7 @@ public class UserController {
             foundUser.getLogs().add(log);
             return userService.save(foundUser);
         } catch (Exception e) {
-            throw UserEditException
+            throw UserException
                     .builder()
                     .msg(e.getMessage())
                     .operation(OPERATION_EDIT_USER)

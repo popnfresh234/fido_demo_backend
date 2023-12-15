@@ -67,5 +67,8 @@ public class LogUtils {
         return log;
     }
 
+    public static String buildRouteLog(String route){
+        return "\n************\n" + route + "\n" + "************";
+    }
 
 }

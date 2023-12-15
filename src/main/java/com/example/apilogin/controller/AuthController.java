@@ -5,10 +5,11 @@ import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.AuthException;
-import com.example.apilogin.model.request.LoginRequest;
-import com.example.apilogin.model.request.RecoveryRequest;
-import com.example.apilogin.model.request.ResetRequest;
-import com.example.apilogin.model.request.UserRequest;
+import com.example.apilogin.exceptions.RecoveryException;
+import com.example.apilogin.model.request.*;
+import com.example.apilogin.model.request.recovery.VerifyRecoveryRequest;
+import com.example.apilogin.model.request.recovery.RecoveryRequest;
+import com.example.apilogin.model.request.recovery.ResetPasswordRequest;
 import com.example.apilogin.model.response.*;
 import com.example.apilogin.security.JwtIssuer;
 import com.example.apilogin.security.UserPrincipal;
@@ -22,9 +23,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,9 +56,6 @@ public class AuthController {
     private final MailUtils mailUtils;
 
 
-
-
-
     public AuthController(
             JwtIssuer jwtIssuer,
             AuthenticationManager authenticationManager,
@@ -86,7 +81,7 @@ public class AuthController {
             @RequestBody @Validated LoginRequest request,
             HttpServletRequest httpServletRequest) {
         try {
-            log.info("POST /login");
+            log.info(LogUtils.buildRouteLog("POST /login"));
             var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     request.getAccount(),
                     request.getPassword()));
@@ -129,7 +124,7 @@ public class AuthController {
     public Response signup(
             @ModelAttribute @Valid UserRequest signupRequest,
             HttpServletRequest httpServletRequest) {
-        log.info("POST /signup");
+        log.info(LogUtils.buildRouteLog("POST /signup"));
         Optional<UserEntity> foundUser = userService.findByEmail(signupRequest.getEmail());
 
 //        If this user already exists in the database, throw an error
@@ -180,10 +175,10 @@ public class AuthController {
 
     @PostMapping(path = "/recovery")
     public Response recoverAccount(
-            @RequestParam @NotEmpty(message = "Account number must not be empty") @Size(min = 2, message = "Account number must be at least two chars") @Size(max = 20, message = "Account number must not be greater than 20 chars") @Pattern(regexp = "^[a-zA-Z0-9]*$") String account,
+            @RequestBody @Valid RecoveryRequest req,
             HttpServletRequest httpServletRequest) {
-        log.info("POST /recovery");
-        Optional<UserEntity> userOptional = userService.findByAccount(account);
+        log.info(LogUtils.buildRouteLog("POST /recovery"));
+        Optional<UserEntity> userOptional = userService.findByAccount(req.getAccount());
 //            Create password recovery code
         try {
             UserEntity user = userOptional.orElseThrow();
@@ -215,16 +210,16 @@ public class AuthController {
             log.info("Found a user, should send recovery email to: " + user.getEmail());
             return new Response("Found a user, should send recovery email to:" + user.getEmail());
         } catch (Exception e) {
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_REQUEST)
-                    .ip(httpServletRequest.getRemoteAddr()).target(account).build();
+            throw RecoveryException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_REQUEST)
+                    .ip(httpServletRequest.getRemoteAddr()).target(req.getAccount()).build();
         }
     }
 
     @PostMapping(path = "/recovery/verify")
     public Response verifyReset(
-            @RequestBody RecoveryRequest request,
+            @RequestBody @Valid VerifyRecoveryRequest request,
             HttpServletRequest httpServletRequest) {
-        log.info("POST/ verify token");
+        log.info(LogUtils.buildRouteLog( "POST/ auth/recovery/verify"));
         Optional<UserEntity> user = userService.findByAccount(request.getAccount());
         try {
             UserEntity recoverUser = user.orElseThrow();
@@ -245,19 +240,19 @@ public class AuthController {
                         request.getAccount(),
                         request.getCode());
             } else {
-                throw new Exception("Bad token");
+                throw new Exception("Invalid recovery code");
             }
         } catch (Exception e) {
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_VERIFY)
+            throw RecoveryException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_VERIFY)
                     .ip(httpServletRequest.getRemoteAddr()).target(request.getAccount()).build();
         }
     }
 
     @PostMapping(path = "/recovery/reset")
     public Response updatePassword(
-            @RequestBody ResetRequest request,
+            @RequestBody @Valid ResetPasswordRequest request,
             HttpServletRequest httpServletRequest) {
-        log.info("POST /recovery/reset");
+        log.info(LogUtils.buildRouteLog( "POST /recovery/reset"));
         try {
             Optional<UserEntity> opUser = userService.findByAccount(request.getAccount());
             UserEntity userEntity = opUser.orElseThrow();
@@ -278,11 +273,10 @@ public class AuthController {
             passwordResetService.delete(reset);
             return new Response("Success");
         } catch (Exception e) {
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_REQUEST)
+            throw RecoveryException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_RECOVERY_REQUEST)
                     .ip(httpServletRequest.getRemoteAddr()).target(request.getAccount()).build();
         }
     }
-
 
 
     @ExceptionHandler(ConstraintViolationException.class)
