@@ -1,6 +1,7 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserLogEntity;
+import com.example.apilogin.exceptions.Fido2AuthException;
 import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.LoginException;
 import com.example.apilogin.exceptions.RecoveryException;
@@ -58,16 +59,17 @@ public class JsonExceptionHandler {
 
     @ExceptionHandler(RecoveryException.class)
     ResponseEntity<Object> handleRecoveryException(RecoveryException exception) {
-        log.error("Recovery error");
-        log.error("Exception: " + exception.getMessage());
-        UserLogEntity userLog = LogUtils.buildLog(
-                userLogService,
-                exception.getOperation(),
-                exception.getTarget(),
-                exception.getIp(),
-                exception.getMessage(),
-                false);
-        userLogService.save(userLog);
+        logErrors(exception, "Recovery error");
+        return buildResponseEntity(exception.getMessage());
+    }
+
+//    ****************************
+//    Handle Fido2 Exceptions
+//    ****************************
+
+    @ExceptionHandler(Fido2AuthException.class)
+    ResponseEntity<Object> handleFidoException(Fido2AuthException exception) {
+        logErrors(exception, "Fido2 Error");
         return buildResponseEntity(exception.getMessage());
     }
 
@@ -95,6 +97,19 @@ public class JsonExceptionHandler {
         log.error(exception.getMessage());
 
         return buildResponseEntity(exception.getMessage());
+    }
+
+    private void logErrors(GeneralException exception, String errorType){
+        log.error(errorType);
+        log.error("Exception: " + exception.getMessage());
+        UserLogEntity userLog = LogUtils.buildLog(
+                userLogService,
+                exception.getOperation(),
+                exception.getTarget(),
+                exception.getIp(),
+                exception.getMessage(),
+                false);
+        userLogService.save(userLog);
     }
 
     private ResponseEntity<Object> buildResponseEntity(String msg) {

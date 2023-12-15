@@ -3,6 +3,7 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.exceptions.AuthException;
+import com.example.apilogin.exceptions.Fido2AuthException;
 import com.example.apilogin.model.response.LoginResponse;
 import com.example.apilogin.model.webauthn.request.auth.req_do_auth.Fido2DoAuthReq;
 import com.example.apilogin.model.webauthn.request.reg.do_req.Fido2DoRegReq;
@@ -64,7 +65,7 @@ public class WebauthnController {
     public Fido2RequestRegResp requestReg(
             @RequestBody Fido2RequestRegReq req,
             HttpServletRequest httpServletRequest) {
-        log.info("POST /requestReg");
+        log.info(LogUtils.buildRouteLog("POST /requestReg"));
 
         try {
             req.getBody().setUsername(AuthUtils.getPrincipal().getUsername());
@@ -78,7 +79,7 @@ public class WebauthnController {
             log.error(e.getMessage());
 
 
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_REG_REQ)
+            throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
@@ -91,12 +92,13 @@ public class WebauthnController {
     public Fido2DoRegResp doReg(
             @RequestBody Fido2DoRegReq req,
             HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("FIDO2 POST /doReg"));
         try {
             return webauthnService.doReg(req);
         } catch (Exception e) {
             log.error("doReg Exception");
             log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_REG_REQ)
+            throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
@@ -107,6 +109,7 @@ public class WebauthnController {
 
     @PostMapping(path = "/requestAuth")
     public Fido2RequestAuthResp requestAuth(@RequestBody Fido2RequestAuthReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("FIDO2 POST /requestAuth"));
         try {
             req.getBody().setOrigin(fidoOrigin);
             req.getBody().setRpId(fidoRpId);
@@ -114,7 +117,7 @@ public class WebauthnController {
         } catch (Exception e) {
             log.error("reqAuth Exception");
             log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_AUTH_REQ)
+            throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.REQ_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
@@ -128,6 +131,7 @@ public class WebauthnController {
             @RequestBody Fido2DoAuthReq req,
             HttpServletRequest httpServletRequest) {
 
+        log.info(LogUtils.buildRouteLog("FIDO2 POST /doAuth"));
         Fido2DoAuthResp res = webauthnService.doAuth(req);
         //If auth fails, throw auth exception
         if (!res.getHeader().getCode().equals("1200")) {
@@ -176,7 +180,7 @@ public class WebauthnController {
         } catch (Exception e) {
             log.error("doAuth exception");
             log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_AUTH_REQ)
+            throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
         return res;
