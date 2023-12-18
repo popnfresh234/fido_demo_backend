@@ -7,43 +7,28 @@ import java.time.LocalDateTime;
 
 public class LogUtils {
 
-    //FIDO2
     public static final String OPERATION_LOGIN = "login";
     public static final String OPERATION_SIGNUP = "signup";
     public static final String OPERATION_RECOVERY_REQUEST = "recovery_request";
     public static final String OPERATION_RECOVERY_VERIFY = "recovery_verify";
     public static final String OPERATION_RECOVERY_RESET = "recovery_reset";
-    public static final String REQ_REG_REQ = "webauthn_req_reg_req";
-    public static final String DO_REG_REQ = "webauthn_do_req_req";
-    public static final String REQ_AUTH_REQ = "webauthn_req_auth_req";
-    public static final String DO_AUTH_REQ = "webauthn_do_auth_req";
+
+    //FIDO2
+    public static final String FIDO2_REQ_REG_REQ = "fido2_req_reg_req";
+    public static final String FIDO2_DO_REG_REQ = "fido2_do_req_req";
+    public static final String FIDO2_REQ_AUTH_REQ = "fido2_req_auth_req";
+    public static final String FIDO2_AUTH_REQ = "fido2_do_auth_req";
 
     //UAF
-
     public static final String UAF_REQ_FACETS_REQ = "uaf_req_facets_req";
-
     public static final String UAF_REQ_REG_REQ = "uaf_req_reg_req";
-    public static final String UAF_REQ_REG_RES = "uaf_req_reg_res";
-
     public static final String UAF_DO_REG_REQ = "uaf_do_reg_req";
-    public static final String UAF_DO_REG_RES = "uaf_do_reg_res";
-
-
     public static final String UAF_REQ_AUTH_REQ = "uaf_req_auth_req";
-    public static final String UAF_REQ_AUTH_RES = "uaf_req_auth_res";
-
     public static final String UAF_DO_AUTH_REQ = "uaf_do_auth_req";
-    public static final String UAF_DO_AUTH_RES = "uaf_do_auth_res";
-
-
     public static final String UAF_DO_DEREG_REQ = "uaf_do_dereg_req";
-
     public static final String UAF_REQ_QR_CODE_REQ = "uaf_req_qrcde_req";
     public static final String UAF_VALIDATE_QR_CODE_REQ = "uaf_validate_qrcde_req";
-
     public static final String UAF_QR_CODE_LOGIN_REQ = "uaf_qr_code_login_req";
-
-
     public static final String UAF_REQ_PAIR_AUTH_REQ = "uaf_req_pair_auth_req";
 
     public static UserLogEntity buildLog(
@@ -64,7 +49,7 @@ public class LogUtils {
         return log;
     }
 
-    public static String buildRouteLog(String route){
+    public static String buildRouteLog(String route) {
         return "************  " + route + "  ************";
     }
 

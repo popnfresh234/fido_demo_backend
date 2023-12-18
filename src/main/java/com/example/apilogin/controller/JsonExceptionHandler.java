@@ -64,7 +64,7 @@ public class JsonExceptionHandler {
 //    ****************************
     @ExceptionHandler(Fido2AuthException.class)
     ResponseEntity<Object> handleFidoException(Fido2AuthException exception) {
-        logErrors(exception, "Fido2 Error");
+        logErrors(exception, "FIDO2 Error");
         return buildResponseEntity(exception.getMessage());
     }
 //    ****************************
