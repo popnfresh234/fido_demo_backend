@@ -76,8 +76,6 @@ public class UafController {
             res = uafService.requestReg(uafRequestRegReq);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("UAF Request Reg Error");
             log.error("UAF Request Reg Request: ");
             log.error(gson.toJson(uafRequestRegReq));
             log.error("UAF Request Reg Response: ");
@@ -100,8 +98,6 @@ public class UafController {
             res = uafService.doReg(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("UAF Do Reg Error");
             log.error("UAF doReg Request: ");
             log.error(gson.toJson(req));
             log.error("UAF doReg Response: ");
@@ -125,8 +121,6 @@ public class UafController {
             res = uafService.doDeReg(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("UAF Do Dereg Error");
             log.error("UAF doDereg Request: ");
             log.error(gson.toJson(req));
             throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_DEREG_REQ)
@@ -149,8 +143,6 @@ public class UafController {
             res = uafService.requestAuth(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("UAF Req Auth Error");
             log.error("UAF reqAuth Request: ");
             log.error(gson.toJson(req));
             log.error("UAF reqAUth Response");
@@ -173,8 +165,6 @@ public class UafController {
             res = uafService.doAuth(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("UAF Do Auth Exception");
             log.error("UAF doAuth request: ");
             log.error(gson.toJson(req));
             log.error("UAF doAuth Response: ");
@@ -217,8 +207,6 @@ public class UafController {
                     ResFacets.class);
             return resFacets.getBody();
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("Get Facets Error");
             throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_FACETS_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
@@ -237,8 +225,6 @@ public class UafController {
             res = uafService.requestQRCode(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("Request QR Code Error");
             log.error("UAF getQRCode request: ");
             log.error(gson.toJson(req));
             log.error("UAF requestQRCode Response: ");
@@ -262,8 +248,6 @@ public class UafController {
             res = uafService.requestPairAuth(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("Request Pair Auth Error");
             log.error("UAF requestPairAuth request: ");
             log.error(gson.toJson(req));
             log.error("UAF requestPairAuth response: ");
@@ -288,8 +272,6 @@ public class UafController {
             res =  uafService.validateQrCode(req);
             return res;
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("validate QR Code error");
             log.error("UAF validateQRCode request: ");
             log.error(gson.toJson(req));
             log.error("UAF validateQRCode response: ");
@@ -347,8 +329,6 @@ public class UafController {
                     stringAuths);
 
         } catch (Exception e) {
-            log.error("QR Code Login exception");
-            log.error(e.getMessage());
             throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_QR_CODE_LOGIN_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }

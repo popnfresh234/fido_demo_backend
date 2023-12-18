@@ -1,10 +1,7 @@
 package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserLogEntity;
-import com.example.apilogin.exceptions.Fido2AuthException;
-import com.example.apilogin.exceptions.GeneralException;
-import com.example.apilogin.exceptions.RecoveryException;
-import com.example.apilogin.exceptions.UafException;
+import com.example.apilogin.exceptions.*;
 import com.example.apilogin.model.response.ErrorResponse;
 import com.example.apilogin.services.UserLogService;
 import com.example.apilogin.utils.LogUtils;
@@ -32,7 +29,7 @@ public class JsonExceptionHandler {
         this.userLogService = userLogService;
     }
 
-    //    ****************************
+//    ****************************
 //    Handle All Validation Exceptions
 //    ****************************
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -51,11 +48,22 @@ public class JsonExceptionHandler {
     }
 
 //    ****************************
+//    Handle Auth Exceptions
+//    ****************************
+@ExceptionHandler(AuthException.class)
+ResponseEntity<Object> handleFidoException(AuthException exception) {
+    logErrors(exception,
+              exception.getOperation());
+    return buildResponseEntity(exception.getMessage());
+}
+
+//    ****************************
 //    Handle Recovery Exceptions
 //    ****************************
     @ExceptionHandler(RecoveryException.class)
     ResponseEntity<Object> handleRecoveryException(RecoveryException exception) {
-        logErrors(exception, "Recovery error");
+        logErrors(exception,
+                  exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
 
@@ -64,7 +72,7 @@ public class JsonExceptionHandler {
 //    ****************************
     @ExceptionHandler(Fido2AuthException.class)
     ResponseEntity<Object> handleFidoException(Fido2AuthException exception) {
-        logErrors(exception, "FIDO2 Error");
+        logErrors(exception, exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
 //    ****************************
@@ -72,7 +80,8 @@ public class JsonExceptionHandler {
 //    ****************************
     @ExceptionHandler(UafException.class)
     ResponseEntity<Object> handleUafException(Fido2AuthException exception) {
-        logErrors(exception, "UAF Error");
+        logErrors(exception,
+                  exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
 
@@ -86,7 +95,7 @@ public class JsonExceptionHandler {
     public ResponseEntity<Object> handleAllOtherErrors(
             HttpServletRequest req,
             Exception exception) {
-        log.error(LogUtils.buildRouteLog(req.getRequestURI()));
+        log.error("Path: " + LogUtils.buildRouteLog(req.getRequestURI()));
         log.error("Class: " + exception.getClass());
         String target = (String) req.getAttribute("account");
         UserLogEntity userLog = LogUtils.buildLog(

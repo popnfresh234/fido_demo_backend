@@ -90,7 +90,6 @@ public class AuthController {
             var token = jwtIssuer.issue(
                     principal.getUserId(),
                     principal.getAccount(),
-
                     principal.getName(),
                     principal.getEmail(),
                     roles);
@@ -167,7 +166,6 @@ public class AuthController {
             userService.save(user);
             return new SignupResponse("New user added!");
         } catch (Exception e) {
-
             throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.OPERATION_SIGNUP)
                     .ip(httpServletRequest.getRemoteAddr()).target(signupRequest.getAccount()).build();
         }

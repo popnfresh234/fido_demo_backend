@@ -75,10 +75,6 @@ public class WebauthnController {
             req.getBody().setRpName("Fido Lab Relying Party");
             return webauthnService.requestReg(req);
         } catch (Exception e) {
-            log.error("FIDO2 reqReg Exception");
-            log.error(e.getMessage());
-
-
             throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.FIDO2_REQ_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
@@ -96,8 +92,6 @@ public class WebauthnController {
         try {
             return webauthnService.doReg(req);
         } catch (Exception e) {
-            log.error("FIDO2 doReg Exception");
-            log.error(e.getMessage());
             throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.FIDO2_DO_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
@@ -115,8 +109,6 @@ public class WebauthnController {
             req.getBody().setRpId(fidoRpId);
             return webauthnService.requestAuth(req);
         } catch (Exception e) {
-            log.error("FIDO2 reqAuth Exception");
-            log.error(e.getMessage());
             throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.FIDO2_REQ_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
@@ -178,8 +170,6 @@ public class WebauthnController {
                     stringAuths));
 
         } catch (Exception e) {
-            log.error("FIDO2 doAuth exception");
-            log.error(e.getMessage());
             throw Fido2AuthException.builder().msg(e.getMessage()).operation(LogUtils.FIDO2_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }

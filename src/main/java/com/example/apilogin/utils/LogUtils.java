@@ -14,8 +14,8 @@ public class LogUtils {
     public static final String OPERATION_RECOVERY_RESET = "recovery_reset";
 
     //FIDO2
-    public static final String FIDO2_REQ_REG_REQ = "fido2_req_reg_req";
-    public static final String FIDO2_DO_REG_REQ = "fido2_do_req_req";
+    public static final String FIDO2_REQ_REG_REQ = "fido2_req_registration_req";
+    public static final String FIDO2_DO_REG_REQ = "fido2_do_registration_req";
     public static final String FIDO2_REQ_AUTH_REQ = "fido2_req_auth_req";
     public static final String FIDO2_AUTH_REQ = "fido2_do_auth_req";
 
