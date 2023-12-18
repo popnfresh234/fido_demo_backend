@@ -2,7 +2,6 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
-import com.example.apilogin.exceptions.AuthException;
 import com.example.apilogin.exceptions.UafException;
 import com.example.apilogin.model.request.LoginRequest;
 import com.example.apilogin.model.response.LoginResponse;
@@ -295,7 +294,7 @@ public class UafController {
             log.error(gson.toJson(req));
             log.error("UAF validateQRCode response: ");
             log.error(gson.toJson(res));
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_VALIDATE_QR_CODE_REQ)
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_VALIDATE_QR_CODE_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }

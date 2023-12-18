@@ -3,16 +3,14 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.Fido2AuthException;
 import com.example.apilogin.exceptions.GeneralException;
-import com.example.apilogin.exceptions.LoginException;
 import com.example.apilogin.exceptions.RecoveryException;
+import com.example.apilogin.exceptions.UafException;
 import com.example.apilogin.model.response.ErrorResponse;
 import com.example.apilogin.services.UserLogService;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +53,6 @@ public class JsonExceptionHandler {
 //    ****************************
 //    Handle Recovery Exceptions
 //    ****************************
-
     @ExceptionHandler(RecoveryException.class)
     ResponseEntity<Object> handleRecoveryException(RecoveryException exception) {
         logErrors(exception, "Recovery error");
@@ -66,10 +62,17 @@ public class JsonExceptionHandler {
 //    ****************************
 //    Handle Fido2 Exceptions
 //    ****************************
-
     @ExceptionHandler(Fido2AuthException.class)
     ResponseEntity<Object> handleFidoException(Fido2AuthException exception) {
         logErrors(exception, "Fido2 Error");
+        return buildResponseEntity(exception.getMessage());
+    }
+//    ****************************
+//    Handle UAF Exceptions
+//    ****************************
+    @ExceptionHandler(UafException.class)
+    ResponseEntity<Object> handleUafException(Fido2AuthException exception) {
+        logErrors(exception, "UAF Error");
         return buildResponseEntity(exception.getMessage());
     }
 
