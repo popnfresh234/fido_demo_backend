@@ -2,7 +2,6 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.entities.UserLogEntity;
-import com.example.apilogin.exceptions.GeneralException;
 import com.example.apilogin.exceptions.UserException;
 import com.example.apilogin.model.request.UserRequest;
 import com.example.apilogin.security.JwtToPrincipalConverter;
@@ -34,10 +33,7 @@ public class UserController {
     private final UserLogService userLogService;
 
     public UserController(
-            UserService userService,
-            UserLogService userLogService,
-            JwtToPrincipalConverter jwtToPrincipalConverter
-    ){
+            UserService userService, UserLogService userLogService, JwtToPrincipalConverter jwtToPrincipalConverter) {
         this.userService = userService;
         this.userLogService = userLogService;
         this.jwtToPrincipalConverter = jwtToPrincipalConverter;
@@ -45,7 +41,7 @@ public class UserController {
 
     @GetMapping()
     public @ResponseBody UserEntity getUser() {
-        log.info("GET /user/");
+        log.info(LogUtils.buildRouteLog("GET /user/"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt token = (Jwt) authentication.getPrincipal();
         UserPrincipal principal = jwtToPrincipalConverter.convert(token);
@@ -60,47 +56,51 @@ public class UserController {
     @PostMapping(path = "/")
     public @ResponseBody UserEntity editUser(
 
-            @ModelAttribute UserRequest editRequest,
-            HttpServletRequest httpServletRequest
+            @ModelAttribute UserRequest editRequest, HttpServletRequest httpServletRequest
 
     ) {
-        log.info("POST /user");
+        log.info(LogUtils.buildRouteLog("POST /user"));
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Jwt token = (Jwt) authentication.getPrincipal();
             UserPrincipal principal = jwtToPrincipalConverter.convert(token);
             Optional<UserEntity> user = userService.findByAccount(principal.getAccount());
             UserEntity foundUser = user.orElseThrow();
-            setUserData(foundUser, editRequest.getName(), editRequest.getBirthdate(), editRequest.getCity(), editRequest.getDistrict(),
-                    editRequest.getStreet(), editRequest.getAlley(), editRequest.getLane(), editRequest.getFloor());
+            setUserData(
+                    foundUser,
+                    editRequest.getName(),
+                    editRequest.getBirthdate(),
+                    editRequest.getCity(),
+                    editRequest.getDistrict(),
+                    editRequest.getStreet(),
+                    editRequest.getAlley(),
+                    editRequest.getLane(),
+                    editRequest.getFloor());
             foundUser.setImage(editRequest.getImage().getBytes());
             foundUser.setImageName(editRequest.getImageName());
-            log.error(editRequest.getImageName());
             UserLogEntity log = LogUtils.buildLog(
                     userLogService,
                     OPERATION_EDIT_USER,
                     foundUser.getAccount(),
                     httpServletRequest.getRemoteAddr(),
                     "Edit user details",
-                    true
-            );
+                    true);
             foundUser.getLogs().add(log);
             return userService.save(foundUser);
         } catch (Exception e) {
-            throw UserException
-                    .builder()
-                    .msg(e.getMessage())
-                    .operation(OPERATION_EDIT_USER)
-                    .ip(httpServletRequest.getRemoteAddr())
-                    .target(editRequest.getAccount())
-                    .build();
+            throw UserException.builder().msg(e.getMessage()).operation(OPERATION_EDIT_USER)
+                    .ip(httpServletRequest.getRemoteAddr()).target(editRequest.getAccount()).build();
         }
     }
 
-    public static void setUserData(UserEntity user, String name, String birthdate, String city, String district, String street, String alley, String lane, String floor) {
+    public static void setUserData(
+            UserEntity user, String name, String birthdate, String city, String district, String street, String alley,
+            String lane, String floor) {
         user.setName(name);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate date = LocalDate.parse(birthdate, formatter);
+        LocalDate date = LocalDate.parse(
+                birthdate,
+                formatter);
         user.setBirthdate(date);
         user.setCity(city);
         user.setDistrict(district);

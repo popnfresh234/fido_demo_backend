@@ -30,74 +30,55 @@ public class NewsController {
     private final NewsRepository newsRepository;
 
     public NewsController(
-            PagingNewsService pagingNewsService,
-            NewsRepository newsRepository) {
+            PagingNewsService pagingNewsService, NewsRepository newsRepository) {
         this.pagingNewsService = pagingNewsService;
         this.newsRepository = newsRepository;
     }
 
     @GetMapping(path = "/")
     public @ResponseBody Optional<NewsEntity> getNewsItem(@RequestParam Integer id) {
-        log.info("GET /news/:id");
+        log.info(LogUtils.buildRouteLog("GET /news/:id"));
         return newsRepository.findById(id);
     }
 
     @GetMapping(path = "/paging")
     public @ResponseBody ResponseEntity<Map<String, Object>> getNewsItem(
-            @RequestParam(defaultValue = "0") Integer pageNumber,
-            @RequestParam Integer pageSize,
+            @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam Integer pageSize,
             HttpServletRequest httpServletRequest) {
-        log.info("GET /news/paging");
+        log.info(LogUtils.buildRouteLog("GET /news/paging"));
         try {
             return buildResponse(
                     pageNumber,
                     pageSize);
         } catch (Exception e) {
-            throw NewsException
-                    .builder()
-                    .msg(e.getMessage())
-                    .operation(OPERATION_REQUEST_NEWS)
-                    .ip(httpServletRequest.getRemoteAddr())
-                    .target(AuthUtils.getPrincipal().getAccount())
-                    .build();
+            throw NewsException.builder().msg(e.getMessage()).operation(OPERATION_REQUEST_NEWS)
+                    .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
     @PostMapping(path = "/delete")
     public ResponseEntity<Map<String, Object>> deleteNewsItems(
-            @RequestBody
-            Integer[] deleteArray,
-            @RequestParam(defaultValue = "0")
-            Integer pageNumber,
-            @RequestParam
-            Integer pageSize,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /news/delete");
+            @RequestBody Integer[] deleteArray, @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam Integer pageSize, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /news/delete"));
         try {
             pagingNewsService.deleteAllById(Arrays.asList(deleteArray));
             return buildResponse(
                     pageNumber,
                     pageSize);
         } catch (Exception e) {
-            throw NewsException
-                    .builder()
-                    .msg(e.getMessage())
-                    .operation(OPERATION_NEWS_DELETE)
-                    .ip(httpServletRequest.getRemoteAddr())
-                    .target(AuthUtils.getPrincipal().getAccount())
-                    .build();
+            throw NewsException.builder().msg(e.getMessage()).operation(OPERATION_NEWS_DELETE)
+                    .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(
-            Integer pageNumber,
-            Integer pageSize) {
+            Integer pageNumber, Integer pageSize) {
         List<NewsEntity> newsItems;
         Pageable paging = PageRequest.of(
                 pageNumber,
                 pageSize,
-                Sort.by("localDate")
-                        .descending());
+                Sort.by("localDate").descending());
         Page<NewsEntity> pageNews;
         pageNews = pagingNewsService.findAll(paging);
         newsItems = pageNews.getContent();
@@ -119,6 +100,4 @@ public class NewsController {
                 HttpStatus.OK);
 
     }
-
-
 }

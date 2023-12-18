@@ -1,12 +1,7 @@
 package com.example.apilogin.utils;
 
 import com.example.apilogin.entities.UserLogEntity;
-import com.example.apilogin.security.JwtToPrincipalConverter;
-import com.example.apilogin.security.UserPrincipal;
 import com.example.apilogin.services.UserLogService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.LocalDateTime;
 
@@ -45,6 +40,8 @@ public class LogUtils {
 
     public static final String UAF_REQ_QR_CODE_REQ = "uaf_req_qrcde_req";
     public static final String UAF_VALIDATE_QR_CODE_REQ = "uaf_validate_qrcde_req";
+
+    public static final String UAF_QR_CODE_LOGIN_REQ = "uaf_qr_code_login_req";
 
 
     public static final String UAF_REQ_PAIR_AUTH_REQ = "uaf_req_pair_auth_req";

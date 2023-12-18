@@ -3,9 +3,9 @@ package com.example.apilogin.controller;
 import com.example.apilogin.entities.RoleEntity;
 import com.example.apilogin.entities.UserEntity;
 import com.example.apilogin.exceptions.AuthException;
+import com.example.apilogin.exceptions.UafException;
 import com.example.apilogin.model.request.LoginRequest;
 import com.example.apilogin.model.response.LoginResponse;
-import com.example.apilogin.model.response.Response;
 import com.example.apilogin.model.uaf.request.auth.do_auth_req.UafDoAuthReq;
 import com.example.apilogin.model.uaf.request.auth.req_auth_req.UafRequestAuthReq;
 import com.example.apilogin.model.uaf.request.facet.FacetsBody;
@@ -52,118 +52,142 @@ public class UafController {
     private final UafService uafService;
     private final UserService userService;
     private final JwtIssuer jwtIssuer;
+    private final Gson gson;
     private final static String appId = "https://demo-frontend-alex-demo.apps.oc.webcomm.com.tw/api/uaf/facets";
 
     public UafController(UafService uafService, UserService userService, JwtIssuer jwtIssuer) {
         this.uafService = uafService;
         this.userService = userService;
         this.jwtIssuer = jwtIssuer;
+        this.gson = new Gson();
     }
 
-
-    @GetMapping(path = "/test")
-    public Response test() {
-        return new Response("This is a test");
-    }
+    // ***************************************
+    // Request Registration
+    // ***************************************
 
     @PostMapping(path = "/requestReg")
     public UafReqRegRes requestReg(
-            @RequestBody
-            UafRequestRegReq uafRequestRegReq,
-            HttpServletRequest httpServletRequest) {
-
-
-        log.info("POST /uaf/requestReg");
-
+            @RequestBody UafRequestRegReq uafRequestRegReq, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/requestReg"));
         uafRequestRegReq.getBody().setAppID(appId);
         uafRequestRegReq.getBody().setRpServerData("testdata");
+        UafReqRegRes res = null;
         try {
-
-            return uafService.requestReg(uafRequestRegReq);
+            res = uafService.requestReg(uafRequestRegReq);
+            return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("UAF Request Reg Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_REG_REQ)
+            log.error("UAF Request Reg Request: ");
+            log.error(gson.toJson(uafRequestRegReq));
+            log.error("UAF Request Reg Response: ");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
+
+    // ***************************************
+    // Do Registration
+    // ***************************************
 
     @PostMapping("/doReg")
     public UafDoRegRes doReg(
-            @RequestBody
-            UafDoRegReq doRegReq,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /uaf/doReg");
+            @RequestBody UafDoRegReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/doReg"));
+        UafDoRegRes res = null;
         try {
-            return uafService.doReg(doRegReq);
+            res = uafService.doReg(req);
+            return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("UAF Do Reg Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_REG_REQ)
+            log.error("UAF doReg Request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF doReg Response: ");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_REG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
+
+    // ***************************************
+    // Do Deregistration
+    // ***************************************
 
     @PostMapping("/doDereg")
     public UafDoDeregRes doDereg(
-            @RequestBody UafDoDeregReq req,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /uaf/doDereg");
+            @RequestBody UafDoDeregReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/doDereg"));
         req.getBody().setAppID(appId);
         try {
-            return uafService.doDeReg(req);
+            UafDoDeregRes res = null;
+            res = uafService.doDeReg(req);
+            return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("UAF Do Dereg Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_DEREG_REQ)
+            log.error("UAF doDereg Request: ");
+            log.error(gson.toJson(req));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_DEREG_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
 
     }
+
+    // ***************************************
+    // Request Authorization
+    // ***************************************
 
     @PostMapping("/requestAuth")
     public UafRequestAuthRes requestAuth(
-            @RequestBody
-            UafRequestAuthReq req,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /uaf/requestAuth");
-        req.getBody().setAppID(appId);
+            @RequestBody UafRequestAuthReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/requestAuth"));
+        UafRequestAuthRes res = null;
         try {
-            UafRequestAuthRes res = uafService.requestAuth(req);
-            return uafService.requestAuth(req);
+
+            res = uafService.requestAuth(req);
+            return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("UAF Req Auth Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_AUTH_REQ)
+            log.error("UAF reqAuth Request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF reqAUth Response");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
+    // ***************************************
+    // Do Authorization
+    // ***************************************
+
     @PostMapping("/doAuth")
     public UafDoAuthRes doAuth(
-            @RequestBody UafDoAuthReq req,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /uaf/doAuth");
-        log.info("do auth request");
-        log.info(new Gson().toJson(req));
+            @RequestBody UafDoAuthReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/doAuth"));
+        UafDoAuthRes res = null;
         try {
-
-            log.info("do auth response");
-            UafDoAuthRes res = uafService.doAuth(req);
-            log.info(new Gson().toJson(res));
+            res = uafService.doAuth(req);
             return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("UAF Do Auth Exception");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_AUTH_REQ)
+            log.error("UAF doAuth request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF doAuth Response: ");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_DO_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
+
+    // ***************************************
+    // Get Facets
+    // ***************************************
 
     @GetMapping("/facets")
     public FacetsBody getFacets(HttpServletRequest httpServletRequest) {
@@ -172,17 +196,20 @@ public class UafController {
                 httpServletRequest);
     }
 
+    // ***************************************
+    // Get Facets with Trailing Slash Added
+    // ***************************************
+
     @GetMapping("/facets/")
-    public FacetsBody noGood(HttpServletRequest httpServletRequest) {
+    public FacetsBody getFacetsWithSlashAddedForSomeReason(HttpServletRequest httpServletRequest) {
         return getFacetsBody(
                 "GET /uaf/facets/",
                 httpServletRequest);
     }
 
     private FacetsBody getFacetsBody(
-            String message,
-            HttpServletRequest httpServletRequest) {
-        log.info(message);
+            String message, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog(message));
         try {
             HttpResponse<String> res = uafService.getFacets();
             Gson gson = new GsonBuilder().create();
@@ -193,76 +220,94 @@ public class UafController {
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("Get Facets Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_FACETS_REQ)
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_FACETS_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
+
+    // ***************************************
+    // Request QR Code
+    // ***************************************
 
     @PostMapping(path = "/qrcode/requestQrCode")
     public RequestQRCodeRes requestQrCode(
-            @RequestBody
-            RequestQRCodeReq req,
-            HttpServletRequest httpServletRequest) {
-        log.info("POST /qrcode/requestQrCode");
+            @RequestBody RequestQRCodeReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /qrcode/requestQrCode"));
+        RequestQRCodeRes res = null;
         try {
-            return uafService.requestQRCode(req);
+            res = uafService.requestQRCode(req);
+            return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("Request QR Code Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_QR_CODE_REQ)
+            log.error("UAF getQRCode request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF requestQRCode Response: ");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_QR_CODE_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
+    // ***************************************
+    // Request Pair Authorization
+    // ***************************************
+
     @PostMapping(path = "/requestPairAuth")
     public UafRequestAuthRes requestPairAuth(
-            @RequestBody
-            UafRequestPairAuthReq req, HttpServletRequest httpServletRequest) {
-        log.info("POST /ufa/requestPairAuth");
+            @RequestBody UafRequestPairAuthReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /ufa/requestPairAuth"));
         req.getBody().setAppID(appId);
-        log.info("Request Pair Auth Req");
-        log.info(new Gson().toJson(req));
+        UafRequestAuthRes res = null;
         try {
-            UafRequestAuthRes res =uafService.requestPairAuth(req);
-
-            log.info("requestPairAuthResponse");
-            log.info(new Gson().toJson(res));
+            res = uafService.requestPairAuth(req);
             return res;
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("Request Pair Auth Error");
-            log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_PAIR_AUTH_REQ)
+            log.error("UAF requestPairAuth request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF requestPairAuth response: ");
+            log.error(gson.toJson(res));
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_REQ_PAIR_AUTH_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
 
         }
     }
 
-    @PostMapping(path="qrcode/validateQrCode")
-    public ValidateQRCodeRes validateQRCode(@RequestBody
-            ValidateQRCodeReq req, HttpServletRequest httpServletRequest){
-        log.info("POST /uaf/qrcode/validateQrCode");
-        try{
+    // ***************************************
+    // Validate QR Code
+    // ***************************************
+
+    @PostMapping(path = "qrcode/validateQrCode")
+    public ValidateQRCodeRes validateQRCode(
+            @RequestBody ValidateQRCodeReq req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /uaf/qrcode/validateQrCode"));
+        ValidateQRCodeRes res = null;
+        try {
             req.getBody().setAppId(appId);
-            log.error(new Gson().toJson(req));
-            ValidateQRCodeRes res =  uafService.validateQrCode(req);
-            log.error(new Gson().toJson(res));
+            res =  uafService.validateQrCode(req);
             return res;
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             log.error("validate QR Code error");
-            log.error(e.getMessage());
+            log.error("UAF validateQRCode request: ");
+            log.error(gson.toJson(req));
+            log.error("UAF validateQRCode response: ");
+            log.error(gson.toJson(res));
             throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.UAF_VALIDATE_QR_CODE_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
 
-    @PostMapping(path="/qrcode/login")
-    public LoginResponse qrCodeLogin(@RequestBody
-            LoginRequest req, HttpServletRequest httpServletRequest){
-        log.info("POST /qrcode/login");
+    // ***************************************
+    // Do QR Code Login
+    // ***************************************
+
+    @PostMapping(path = "/qrcode/login")
+    public LoginResponse qrCodeLogin(
+            @RequestBody LoginRequest req, HttpServletRequest httpServletRequest) {
+        log.info(LogUtils.buildRouteLog("POST /qrcode/login"));
 
         try {
             // Look up the user by account
@@ -297,16 +342,15 @@ public class UafController {
                     stringAuths);
 
             // Add the login response to the fido response for frontend
-            LoginResponse res = new LoginResponse(
-                    "Login Success",
+            return new LoginResponse(
+                    "QR Code Login Success",
                     token,
                     stringAuths);
-            return res;
 
         } catch (Exception e) {
-            log.error("doAuth exception");
+            log.error("QR Code Login exception");
             log.error(e.getMessage());
-            throw AuthException.builder().msg(e.getMessage()).operation(LogUtils.DO_AUTH_REQ)
+            throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_QR_CODE_LOGIN_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
     }
