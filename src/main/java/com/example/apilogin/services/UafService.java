@@ -119,8 +119,6 @@ public class UafService {
 
     public RequestQRCodeRes requestQRCode(RequestQRCodeReq req) throws Exception {
         WebClient webClient = WebClient.create();
-        log.error("CREATE QR CODE");
-        log.error(new Gson().toJson(req));
         return webClient.post()
                 .uri(REQ_QRCODE_URL)
                 .header("applicationContent-type", "application/json")
