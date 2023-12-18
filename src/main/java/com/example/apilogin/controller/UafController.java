@@ -136,10 +136,10 @@ public class UafController {
     @PostMapping("/requestAuth")
     public UafRequestAuthRes requestAuth(
             @RequestBody UafRequestAuthReq req, HttpServletRequest httpServletRequest) {
+        req.getBody().setAppID(appId);
         log.info(LogUtils.buildRouteLog("POST /uaf/requestAuth"));
         UafRequestAuthRes res = null;
         try {
-
             res = uafService.requestAuth(req);
             return res;
         } catch (Exception e) {
