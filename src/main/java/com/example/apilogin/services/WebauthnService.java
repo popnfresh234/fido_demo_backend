@@ -18,14 +18,14 @@ import org.springframework.web.client.RestTemplate;
 @Log4j2
 @Service
 public class WebauthnService {
-    private static final String REQUEST_REG = "/webauthn/requestReg";
-    private static final String DO_REG = "/webauthn/doReg";
-    private static final String REQUEST_AUTH = "/webauthn/requestAuth";
-    private static final String DO_AUTH = "/webauthn/doAuth";
+    private static final String REQUEST_REG = "/rest/fido2/requestReg";
+    private static final String DO_REG = "/rest/fido2/doReg";
+    private static final String REQUEST_AUTH = "/rest/fido2/requestAuth";
+    private static final String DO_AUTH = "/rest/fido2/doAuth";
 
 
 
-    @Value("${fido.middleware.url}")
+    @Value("${fido.identity.server.url}")
     private String fidoMiddlewareUrl;
 
     private final RestTemplate restTemplate;
