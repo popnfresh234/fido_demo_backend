@@ -35,6 +35,11 @@ public class NewsController {
         this.newsRepository = newsRepository;
     }
 
+    @GetMapping(path="/all")
+    public Iterable<NewsEntity> getNews(){
+        return newsRepository.findAll();
+    }
+
     @GetMapping(path = "/")
     public @ResponseBody Optional<NewsEntity> getNewsItem(@RequestParam Integer id) {
         log.info(LogUtils.buildRouteLog("GET /news/:id"));

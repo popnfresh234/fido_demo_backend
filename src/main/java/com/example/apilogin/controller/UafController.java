@@ -160,6 +160,8 @@ public class UafController {
     public UafDoAuthRes doAuth(
             @RequestBody UafDoAuthReq req, HttpServletRequest httpServletRequest) {
         log.info(LogUtils.buildRouteLog("POST /uaf/doAuth"));
+        log.error(new Gson().toJson(req));
+
         UafDoAuthRes res = null;
         try {
             res = uafService.doAuth(req);
