@@ -160,11 +160,10 @@ public class UafController {
     public UafDoAuthRes doAuth(
             @RequestBody UafDoAuthReq req, HttpServletRequest httpServletRequest) {
         log.info(LogUtils.buildRouteLog("POST /uaf/doAuth"));
-        log.error(new Gson().toJson(req));
-
         UafDoAuthRes res = null;
         try {
             res = uafService.doAuth(req);
+            res.setLoginResponse(loginUser(req.getBody().getUsername()));
             return res;
         } catch (Exception e) {
             log.error("UAF doAuth request: ");
@@ -293,46 +292,49 @@ public class UafController {
         log.info(LogUtils.buildRouteLog("POST /qrcode/login"));
 
         try {
-            // Look up the user by account
-            Optional<UserEntity> opt = userService.findByAccount(req.getAccount());
-            UserEntity user = opt.orElseThrow();
-
-            // Login user with correct roles
-            Set<RoleEntity> roles = user.getRole();
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            for (RoleEntity role : roles) {
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
-                authorities.add(authority);
-            }
-
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    user.getAccount(),
-                    "",
-                    authorities);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            // Issue JWT for login flow
-            List<String> stringAuths = new ArrayList<>();
-            for (SimpleGrantedAuthority auth : authorities) {
-                String authority = auth.getAuthority();
-                stringAuths.add(authority);
-            }
-            var token = jwtIssuer.issue(
-                    user.getId(),
-                    user.getAccount(),
-                    user.getName(),
-                    user.getEmail(),
-                    stringAuths);
-
-            // Add the login response to the fido response for frontend
-            return new LoginResponse(
-                    "QR Code Login Success",
-                    token,
-                    stringAuths);
-
+            return loginUser(req.getAccount());
         } catch (Exception e) {
             throw UafException.builder().msg(e.getMessage()).operation(LogUtils.UAF_QR_CODE_LOGIN_REQ)
                     .ip(httpServletRequest.getRemoteAddr()).target(AuthUtils.getPrincipal().getAccount()).build();
         }
+    }
+
+    private LoginResponse loginUser(String username){
+        // Look up the user by account
+        Optional<UserEntity> opt = userService.findByAccount(username);
+        UserEntity user = opt.orElseThrow();
+
+        // Login user with correct roles
+        Set<RoleEntity> roles = user.getRole();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (RoleEntity role : roles) {
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
+            authorities.add(authority);
+        }
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                user.getAccount(),
+                "",
+                authorities);
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        // Issue JWT for login flow
+        List<String> stringAuths = new ArrayList<>();
+        for (SimpleGrantedAuthority auth : authorities) {
+            String authority = auth.getAuthority();
+            stringAuths.add(authority);
+        }
+        var token = jwtIssuer.issue(
+                user.getId(),
+                user.getAccount(),
+                user.getName(),
+                user.getEmail(),
+                stringAuths);
+
+        // Add the login response to the fido response for frontend
+        return new LoginResponse(
+                "QR Code Login Success",
+                token,
+                stringAuths);
     }
 }

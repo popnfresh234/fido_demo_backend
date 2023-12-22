@@ -9,4 +9,5 @@ import java.util.ArrayList;
 @Setter
 public class DoAuthRestRequestBody {
     private ArrayList<UafAuthenticationResponse> authResponses;
+    private String username;
 }

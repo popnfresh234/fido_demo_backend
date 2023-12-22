@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class UafDoAuthRes {
     private RestResponseHeader header;
+    private LoginResponse loginResponse;
 }
