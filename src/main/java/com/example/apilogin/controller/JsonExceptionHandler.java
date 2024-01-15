@@ -4,6 +4,7 @@ import com.example.apilogin.entities.UserLogEntity;
 import com.example.apilogin.exceptions.*;
 import com.example.apilogin.model.response.ErrorResponse;
 import com.example.apilogin.services.UserLogService;
+import com.example.apilogin.utils.ExceptionUtils;
 import com.example.apilogin.utils.LogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2
-@ControllerAdvice
+// @ControllerAdvice
 public class JsonExceptionHandler {
     private final UserLogService userLogService;
 
@@ -29,9 +29,9 @@ public class JsonExceptionHandler {
         this.userLogService = userLogService;
     }
 
-//    ****************************
-//    Handle All Validation Exceptions
-//    ****************************
+    //    ****************************
+    //    Handle All Validation Exceptions
+    //    ****************************
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<Object> handleValidationErrors(
@@ -47,54 +47,60 @@ public class JsonExceptionHandler {
         return buildResponseEntity(msg);
     }
 
-//    ****************************
-//    Handle Auth Exceptions
-//    ****************************
-@ExceptionHandler(AuthException.class)
-ResponseEntity<Object> handleFidoException(AuthException exception) {
-    logErrors(exception,
-              exception.getOperation());
-    return buildResponseEntity(exception.getMessage());
-}
-
-//    ****************************
-//    Handle Recovery Exceptions
-//    ****************************
-    @ExceptionHandler(RecoveryException.class)
-    ResponseEntity<Object> handleRecoveryException(RecoveryException exception) {
-        logErrors(exception,
-                  exception.getOperation());
+    //    ****************************
+    //    Handle Auth Exceptions
+    //    ****************************
+    @ExceptionHandler(AuthException.class)
+    ResponseEntity<Object> handleFidoException(AuthException exception) {
+        logErrors(
+                exception,
+                exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
 
-//    ****************************
-//    Handle Fido2 Exceptions
-//    ****************************
+    //    ****************************
+    //    Handle Recovery Exceptions
+    //    ****************************
+    @ExceptionHandler(RecoveryException.class)
+    ResponseEntity<Object> handleRecoveryException(RecoveryException exception) {
+        logErrors(
+                exception,
+                exception.getOperation());
+        return buildResponseEntity(exception.getMessage());
+    }
+
+    //    ****************************
+    //    Handle Fido2 Exceptions
+    //    ****************************
     @ExceptionHandler(Fido2AuthException.class)
     ResponseEntity<Object> handleFidoException(Fido2AuthException exception) {
         logErrors(exception, exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
-//    ****************************
-//    Handle UAF Exceptions
-//    ****************************
+
+    //    ****************************
+    //    Handle UAF Exceptions
+    //    ****************************
     @ExceptionHandler(UafException.class)
     ResponseEntity<Object> handleUafException(Fido2AuthException exception) {
-        logErrors(exception,
-                  exception.getOperation());
+        logErrors(
+                exception,
+                exception.getOperation());
         return buildResponseEntity(exception.getMessage());
     }
 
 
-//    ****************************
-//    Handle All Other Exceptions
-//    ****************************
+    //    ****************************
+    //    Handle All Other Exceptions
+    //    ****************************
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<Object> handleAllOtherErrors(
             HttpServletRequest req,
             Exception exception) {
+        exception.printStackTrace();
+        log.error(ExceptionUtils.getCause(exception));
         log.error("Path: " + LogUtils.buildRouteLog(req.getRequestURI()));
         log.error("Class: " + exception.getClass());
         String target = (String) req.getAttribute("account");
@@ -111,7 +117,7 @@ ResponseEntity<Object> handleFidoException(AuthException exception) {
         return buildResponseEntity(exception.getMessage());
     }
 
-    private void logErrors(GeneralException exception, String errorType){
+    private void logErrors(GeneralException exception, String errorType) {
         log.error(errorType);
         log.error("Exception: " + exception.getMessage());
         UserLogEntity userLog = LogUtils.buildLog(

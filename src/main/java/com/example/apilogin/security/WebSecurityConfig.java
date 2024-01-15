@@ -57,6 +57,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(
                                 "/",
+                                "favicon.ico",
+                                "error",
+                                "/actuator/**",
                                 "/auth/signup",
                                 "/auth/login",
                                 "/auth/recovery/**",
@@ -81,7 +84,8 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(
+                AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService((customUserDetailService))
                 .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
@@ -94,8 +98,9 @@ public class WebSecurityConfig {
         // Generate RSA keystore
         // keytool -genkey -alias webcomm.demo.backend -keyalg RSA -keypass 123456 -keystore jwt.jks -storepass 123456
         // Move jwt.jks on to classpath
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"),
-                                                                       System.getenv("RSA_PASSWORD").toCharArray());
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
+                new ClassPathResource("jwt.jks"),
+                System.getenv("RSA_PASSWORD").toCharArray());
         return keyStoreKeyFactory.getKeyPair(
                 "webcomm.demo.backend",
                 System.getenv("RSA_PASSWORD").toCharArray());

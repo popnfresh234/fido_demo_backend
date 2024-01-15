@@ -31,7 +31,6 @@ public class UserEntity {
     private  String email;
 
     @NotBlank(message= "Name is mandatory")
-
     private String name;
 
     @JsonIgnore

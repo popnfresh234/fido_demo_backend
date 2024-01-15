@@ -217,7 +217,7 @@ public class AuthController {
     public Response verifyReset(
             @RequestBody @Valid VerifyRecoveryRequest request,
             HttpServletRequest httpServletRequest) {
-        log.info(LogUtils.buildRouteLog( "POST/ auth/recovery/verify"));
+        log.info(LogUtils.buildRouteLog("POST/ auth/recovery/verify"));
         Optional<UserEntity> user = userService.findByAccount(request.getAccount());
         try {
             UserEntity recoverUser = user.orElseThrow();
@@ -250,7 +250,7 @@ public class AuthController {
     public Response updatePassword(
             @RequestBody @Valid ResetPasswordRequest request,
             HttpServletRequest httpServletRequest) {
-        log.info(LogUtils.buildRouteLog( "POST /recovery/reset"));
+        log.info(LogUtils.buildRouteLog("POST /recovery/reset"));
         try {
             Optional<UserEntity> opUser = userService.findByAccount(request.getAccount());
             UserEntity userEntity = opUser.orElseThrow();
